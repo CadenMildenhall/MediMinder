@@ -1,0 +1,75 @@
+
+
+.newSchedule
+{
+    width: 200px;
+    height: 50px;
+    border-radius: 50px;
+    border: none;
+    background-color: white;
+    color: black;
+    font-size: 25px;
+    font-family: fantasy;
+
+    margin-top: -250px;
+}
+
+.button
+{
+    margin: auto;
+    text-align: center;
+    margin-top: 100px;
+}
+
+.edit
+{
+    width: 100px;
+    height: 25px;
+    border-radius: 50px;
+    border: none;
+    background-color: white;
+    color: black;
+    font-size: 15px;
+    font-family: fantasy;
+}
+
+.delete
+{
+    margin-left: 15px;
+    width: 100px;
+    height: 25px;
+    border-radius: 50px;
+    border: none;
+    background-color: white;
+    color: black;
+    font-size: 15px;
+    font-family: fantasy;
+}
+
+.btns
+{
+    margin-top: 20px;
+    text-align: center;
+}
+
+.delete:active
+{
+    transform: scale(.9);
+}
+
+.delete:hover
+{
+    background-color: black;
+    color: white;
+}
+
+.edit:active
+{
+    transform: scale(.9);
+}
+
+.edit:hover
+{
+    background-color: black;
+    color: white;
+}

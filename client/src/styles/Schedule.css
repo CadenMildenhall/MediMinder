@@ -1,0 +1,266 @@
+
+.timeInput
+{
+    width: 200px;
+    height: 50px;
+}
+
+.HomescheduleArea
+{
+    width: 1000px;
+    height: 400px;
+    background-color: white;
+    margin: auto;
+    margin-top: 10px;
+}
+.inputs {
+    display: flex;
+    flex-direction: row;
+    justify-content: center; /* Center the child elements horizontally */
+    align-items: center; /* Center the child elements vertically */
+    margin: auto;
+  }
+  
+  /* ... (your other CSS styles) ... */
+  
+  .dayInput,
+  .medicineInput,
+  .timeInput,
+  .submitS {
+    /* Your existing styles for these input elements */
+    /* You can adjust the width, height, and other styles as needed */
+    /* Example styles: */
+    width: 200px;
+    height: 25px;
+    border-radius: 50px;
+    border: none;
+    text-align: center;
+    margin: 10px; /* Add margin to create space between elements */
+  }
+
+.days
+{
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+}
+
+.Monday
+{
+    width: 200px;
+    height: 400px;
+    background-color: beige;
+}
+
+.Tuesday
+{
+    width: 200px;
+    height: 400px;   
+    background-color: lightgreen;
+}
+
+.Wednesday
+{
+    width: 200px;
+    height: 400px;
+    background-color: lightblue;
+}
+
+.Thursday
+{
+    width: 200px;
+    height: 400px;
+    background-color: lightgray;
+}
+
+.Friday
+{
+    width: 200px;
+    height: 400px;
+    background-color: lightpink;
+}
+
+.Saturday
+{
+    width: 200px;
+    height: 400px;
+    background-color: lightgoldenrodyellow;
+}
+
+.Sunday
+{
+    width: 200px;
+    height: 400px;
+    background-color: lightcyan;
+}
+
+/* .newSchedule
+{
+    width: 200px;
+    height: 50px;
+    border-radius: 50px;
+    border: none;
+    background-color: white;
+    color: black;
+    font-size: 25px;
+    font-family: fantasy;
+
+    margin-top: -250px;
+} */
+
+.editSchedule
+{
+    width: 200px;
+    height: 50px;
+    border-radius: 50px;
+    border: none;
+    background-color: white;
+    color: black;
+    font-size: 25px;
+    font-family: fantasy;
+
+    margin-top: 15px;
+}
+
+.deleteSchedule
+{
+    width: 200px;
+    height: 50px;
+    border-radius: 50px;
+    border: none;
+    background-color: white;
+    color: black;
+    font-size: 25px;
+    font-family: fantasy;
+
+    margin-top: 20px;
+}
+
+.submitS
+{
+    width: 150px;
+    height: 25px;
+    border-radius: 50px;
+    border: none;
+    background-color: white;
+    color: black;
+    font-size: 15px;
+    font-family: fantasy;
+
+    margin-top: 20px;
+}
+
+.cSchedule
+{
+    width: 150px;
+    height: 25px;
+    border-radius: 50px;
+    border: none;
+    background-color: white;
+    color: black;
+    font-size: 15px;
+    font-family: fantasy;
+    margin-left: 5px;
+
+    margin-top: 10px;
+}
+
+.medicineInput
+{
+    border-radius: 50px;
+    border: none;
+    width: 150px;
+    text-align: center;
+    height: 25px;
+    margin-top: 20px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.dayInput
+{
+    border-radius: 50px;
+    border: none;
+    width: 150px;
+    text-align: center;
+    height: 25px;
+    margin-top: 20px;
+}
+
+.buttons
+{
+    margin-top: 50px;
+}
+
+.timeInput
+{
+    border-radius: 50px;
+    border: none;
+    width: 150px;
+    text-align: center;
+    height: 25px;
+    margin-top: 20px;
+    margin-right: 5px;
+}
+
+.noS
+{
+    font-style: italic;
+    opacity: 65%;
+}
+
+.newSchedule:hover
+{
+    background-color: black;
+    color: white;
+}
+
+.editSchedule:hover
+{
+    background-color: black;
+    color: white;
+}
+
+.deleteSchedule:hover
+{
+    background-color: black;
+    color: white;
+}
+
+.submitS:hover
+{
+    background-color: black;
+    color: white;
+}
+
+.submitS:active
+{
+    transform: scale(.9);
+}
+
+.cSchedule:hover
+{
+    background-color: black;
+    color: white;
+}
+
+.cSchedule:active
+{
+    transform: scale(.9);
+}
+
+.editSchedule:active
+{
+    transform: scale(.9);
+}
+
+.newSchedule:active
+{
+    transform: scale(.9);
+}
+
+.deleteSchedule:active
+{
+    transform: scale(.9);
+}
+

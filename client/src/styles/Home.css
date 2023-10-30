@@ -1,0 +1,183 @@
+
+body
+{
+    background-image: url("C:\Users\cado5\workspace\MediMinder\client\public\7283494.jpg");
+    background-size: cover;
+}
+
+.header
+{
+    font-size: 100px;
+    color: lightblue;
+    font-family: fantasy;
+    text-align: center;
+    text-shadow: 10px 10px white;
+
+}
+
+.scheduleBox
+{
+    width: 1000px;
+    height: 400px;
+    background-color: white;
+    margin: auto;
+}
+
+.scheduleArea
+{
+    width: 1000px;
+    height: 400px;
+    background-color: white;
+    margin: auto;
+    margin-top: 10px;
+}
+
+.HomescheduleArea
+{
+    display: flex;
+    flex-direction: row;
+}
+
+.daysH
+{
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    width: 200px;
+    height: 400px;
+}
+
+.check{
+    margin-left: 15px;
+    width: 15px;
+    height: 15px;
+    text-align: right;
+
+}
+
+.Monday
+{
+    width: 200px;
+    height: 400px;
+    background-color: beige;
+}
+
+.Tuesday
+{
+    width: 200px;
+    height: 400px;   
+    background-color: lightgreen;
+}
+
+.Wednesday
+{
+    width: 200px;
+    height: 400px;
+    background-color: lightblue;
+}
+
+.Thursday
+{
+    width: 200px;
+    height: 400px;
+    background-color: lightgray;
+}
+
+.Friday
+{
+    width: 200px;
+    height: 400px;
+    background-color: lightpink;
+}
+
+.Saturday
+{
+    width: 200px;
+    height: 400px;
+    background-color: lightgoldenrodyellow;
+}
+
+.Sunday
+{
+    width: 200px;
+    height: 400px;
+    background-color: lightcyan;
+}
+
+
+.complete
+{
+    width: 200px;
+    height: 50px;
+    border-radius: 50px;
+    border: none;
+    background-color: white;
+    color: black;
+    font-size: 25px;
+    font-family: fantasy;
+
+}
+
+.Hbuttons
+{
+    text-align: center;
+    margin-top: 25px;
+}
+
+.medicines
+{
+    color: black;
+    font-size: 25px;
+}
+
+.sIcon
+{
+    width: 100px;
+    height: 100px;
+}
+
+.pIcon
+{
+    width: 100px;
+    height: 100px;
+    margin-top: 60px;
+    margin-right: -475px;
+
+}
+
+.profileIcon
+{
+    text-align: right;
+    margin-top: 80px;
+    margin-right: 15px;
+}
+
+.scheduleIcon
+{
+    text-align: right;
+    margin-right: 15px;
+    margin-top: -500px;
+
+}
+
+.complete:hover
+{
+    background-color: black;
+    color: white;
+
+}
+
+.complete:active
+{
+    transform: scale(.9);
+}
+
+.sIcon:hover
+{
+    transform: scale(1.1);
+}
+
+.pIcon:hover
+{
+    transform: scale(1.1);
+}
