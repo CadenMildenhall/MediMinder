@@ -11,7 +11,8 @@ public class UserProfile
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string Address { get; set; }
-
+    public decimal Points { get; set; }
+    public int Weeks { get; set; }
     [NotMapped] // not mapped means that EF Core won't create column for this property in the db
     public string Email { get; set; }
     [NotMapped]

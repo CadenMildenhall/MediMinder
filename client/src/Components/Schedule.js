@@ -1,149 +1,159 @@
 import React, { useEffect, useState } from "react";
 import "../styles/Schedule.css";
-import { getMedicines, addMedicine } from "../Managers/MedicineManager";
+import { getMedicines } from "../Managers/MedicineManager";
 import { TimePicker } from "antd";
 import "antd/lib/date-picker/style";
-import { useNavigate } from 'react-router-dom';
-import moment from 'moment';
+import { getDosages } from "../Managers/DosageManager";
+import { getSchedule } from "../Managers/ScheduleManager";
+import { useNavigate } from "react-router-dom";
+import { createMedicineDosageAndSchedule } from "../Managers/ScheduleManager";
+import { createMedicineDosage } from "../Managers/MedicineDosageManager";
 
-
-export const Schedule = () => {
+export const Schedule = ({ onComplete }) => {
   const [inputValue, setInputValue] = useState("");
-  const [selectValue, setSelectValue] = useState(""); // Default day value is "Monday"
+  const [dosageValue, setDosageValue] = useState("");
+  const [selectValue, setSelectValue] = useState("");
+  const [dosage, setDosage] = useState([]);
   const [medicines, setMedicines] = useState([]);
   const [time, setTime] = useState(null);
-  
+  const [days, setDays] = useState([]);
+
+  const [scheduleEntries, setScheduleEntries] = useState([])
+
   const navigate = useNavigate();
 
-  const handleComplete = () => {
-    // Filter medicines based on the selected day and pass it to the Home component
-    const completedMedicines = medicines.filter((m) => m.day === selectValue);
-    // Use navigate to navigate to the Home page with medicine data
-    navigate('/home', { state: { completedMedicines: completedMedicines } });
+  useEffect(() => {
+
+    getSchedule().then((scheduleData) => {
+      setDays(scheduleData); // fetches the schedule data and assigns it to the variable "days"
+    });
+
+    getMedicines().then((medicines) => {
+      setMedicines(medicines); // fetches the medicine data and assigns it to the variable "medicine"
+    });
+
+    getDosages().then((dosageData) => {
+      setDosage(dosageData); // fetches the dosage data and assigns it to the variable "dosage"
+    });
+
+  }
+    , []);
+
+    const handleSubmit = async () => {
+      console.log("Time:", time);
+  
+      // Find selected objects based on user input
+      const selectedDay = days.find((day) => day.day === selectValue);
+      const selectedMedicine = medicines.find((medicine) => medicine.medicineName === inputValue);
+      const selectedDosage = dosage.find((d) => d.amount === parseInt(dosageValue));
+  
+      console.log(selectedDosage);
+      console.log(selectedMedicine);
+  
+      if (selectedDay && selectedMedicine && selectedDosage && time) {
+          try {
+              // Create a new MedicineDosage
+              const createdMedicineDosage = await createMedicineDosage(selectedMedicine.id, selectedDosage.id);
+  
+              // Create a new Schedule entry with the MedicineDosage association
+              const data = await createMedicineDosageAndSchedule(
+                  createdMedicineDosage.MedicineId,
+                  createdMedicineDosage.DosageId,
+                  selectedDay.day,
+                  time
+              );
+  
+              // Update local state with the new schedule entry
+              setScheduleEntries([...scheduleEntries, data]);
+  
+              // Clear form fields and update state
+              setSelectValue("");
+              setInputValue("");
+              setDosageValue("");
+              setTime(null);
+  
+              console.log(data);
+          } catch (error) {
+              console.error("Error handling submit:", error);
+          }
+      }
   };
+  
 
-  // const [complete, setComplete] = useState(false);
-
-    useEffect(() => {
-      getMedicines().then(setMedicines);
-    },[medicines]);
-
-    const handleSubmit = () => {
-
-      const formattedTime = time ? time.format("HH:mm") : null;
-
-      const newMedicine = {
-        medicineName: inputValue,
-        day: selectValue,
-        time: formattedTime
-    };
-    
-    
-
-  addMedicine(newMedicine).then(() => {
-    setInputValue("")
-  });
-   
-}
-
-
+  const handleComplete = (e) => {
+    onComplete = true;
+    navigate("/newschedule");
+  }
 
   return (
-    <div className="buttons">
+    <><div className="buttons">
       <>
         <div className="scheduleArea">
-          <div className="days">
-          <div className="Monday">
-              {medicines
-              .filter((m) => m.day === "Monday")
-              .map((m) => (
-              <h6  key={m.id}>{m.medicineName}: {m.time ? moment(m.time, 'HH:mm').format('hh:mm A') : 'No time selected'}</h6>
-            ))}
+          {days.map((day) => ( //mapping through the days
+            <div key={day.day} className={day.day}>
+              {scheduleEntries
+                .filter((entry) => entry.day === day.day)
+                .map((entry) => (
+                  <h6 key={entry.id}>
+                    {entry.medicine} - {entry.dosage} mg - {entry.time}
+                  </h6>
+                ))}
             </div>
-            <div className="Tuesday">
-            {medicines
-              .filter((m) => m.day === "Tuesday")
-              .map((m) => (
-              <h6  key={m.id}>{m.medicineName}: {m.time ? moment(m.time, 'HH:mm').format('hh:mm A') : 'No time selected'}</h6>
-            ))}
-            </div>
-            <div className="Wednesday">
-            {medicines
-              .filter((m) => m.day === "Wednesday")
-              .map((m) => (
-              <h6  key={m.id}>{m.medicineName}: {m.time}</h6>
-            ))}
-            </div>
-            <div className="Thursday">
-            {medicines
-              .filter((m) => m.day === "Thursday")
-              .map((m) => (
-              <h6  key={m.id}>{m.medicineName}: {m.time}</h6>
-            ))}
-            </div>
-            <div className="Friday">
-            {medicines
-              .filter((m) => m.day === "Friday")
-              .map((m) => (
-              <h6  key={m.id}>{m.medicineName}: {m.time}</h6>
-            ))}
-            </div>
-            <div className="Saturday">
-            {medicines
-              .filter((m) => m.day === "Saturday")
-              .map((m) => (
-              <h6  key={m.id}>{m.medicineName}: {m.time}</h6>
-            ))}
-            </div>
-            <div className="Sunday">
-            {medicines
-              .filter((m) => m.day === "Sunday")
-              .map((m) => (
-              <h6  key={m.id}>{m.medicineName}: {m.time}</h6>
-            ))}
-            </div>
-          </div>
-    </div>
+          ))}
 
-        <div className="inputs">
-        <select
-  className="dayInput"
-  value={selectValue}
-  onChange={(e) => setSelectValue(e.target.value)}
->
-  <option value="Monday">Monday</option>
-  <option value="Tuesday">Tuesday</option>
-  <option value="Wednesday">Wednesday</option>
-  <option value="Thursday">Thursday</option>
-  <option value="Friday">Friday</option>
-  <option value="Saturday">Saturday</option>
-  <option value="Sunday">Sunday</option>
-</select>
-
-
-          <input
-            className="medicineInput"
-            type="text"
-            placeholder="medicine?"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-          />
-
-      <TimePicker 
-        onChange={newTime => setTime(newTime)} 
-        value={time} 
-        format="HH:mm" // Specify the format for the TimePicker
-        className="timeInput" 
-      />
-
-          <button onClick={(e)=>{handleSubmit(e.preventDefault())}} className="submitS">
-            Add
-          </button>
-          <button onClick={handleComplete} className="cSchedule">
-            Complete
-          </button>
         </div>
       </>
     </div>
+
+      <div className="inputs">
+
+        <select
+          className="dayInput"
+          value={selectValue}
+          onChange={(e) => setSelectValue(e.target.value)}
+        >
+          {days
+            .map((d) => (
+              <option value={d.day}>{d.day}</option>
+            ))}
+        </select>
+
+        <select
+          className="medicineInput"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+        >
+          {medicines
+            .map((m) => (
+              <option value={m.medicineName}>{m.medicineName}</option>
+            ))}
+        </select>
+
+        <TimePicker
+          onChange={newTime => setTime(newTime)}
+          value={time}
+          format="HH:mm"
+          className="timeInput" />
+
+        <select
+          className="medicineInput"
+          value={dosageValue}
+          onChange={(e) => setDosageValue(e.target.value)}
+        >
+          {dosage
+            .map((d) => (
+              <option value={d.amount}>{d.amount}</option>
+            ))}
+        </select>
+
+        <button onClick={(e) => { handleSubmit(e.preventDefault()); }} className="submitS">
+          Add
+        </button>
+        <button onClick={(e) => { handleComplete(e.preventDefault()); }} className="cSchedule">
+          Complete
+        </button>
+      </div>
+    </>
   );
 };
+

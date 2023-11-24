@@ -16,10 +16,11 @@ public class ProfileController : ControllerBase
     }
 
 [HttpGet]
+[Route("api/[controller]")]
 // [Authorize]
 public IActionResult Get()
 {
     return Ok(_dbContext.UserProfiles);
 }
 
-}
+    }

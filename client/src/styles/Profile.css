@@ -6,3 +6,68 @@
     margin: auto;
     background-color: white;
 }
+
+.progression
+{
+    font-family: fantasy;
+    text-align: center;
+    font-size: 100px;
+}
+
+.pDiv
+{
+    text-align: center;
+    
+}
+
+.points
+{
+    font-family: fantasy;
+    font-size: 150px;
+}
+
+.numbers
+{
+    font-size: 90px;
+    /* animation: rotate infinite 3s; */
+
+}
+
+.button
+{
+    text-align: center;
+}
+
+.reset
+{
+    width: 200px;
+    height: 50px;
+    border-radius: 50px;
+    border: none;
+    background-color: white;
+    color: black;
+    font-size: 25px;
+    font-family: fantasy;
+}
+
+.reset:active
+{
+    transform: scale(.9);
+}
+
+.reset:hover
+{
+    background-color: black;
+    color: white;
+}
+
+
+/* @keyframes rotate 
+{
+    from{
+        transform: rotateY(0deg);
+    }to{
+        transform: rotateY(360deg);
+    }
+} */
+

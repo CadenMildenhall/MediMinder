@@ -15,6 +15,18 @@ body
 
 }
 
+.hPoints
+{
+    text-align: center;
+    font-family: fantasy;
+    margin-top: 10px;
+}
+
+.hP
+{
+font-size: 20px;
+}
+
 .scheduleBox
 {
     width: 1000px;
@@ -34,10 +46,12 @@ body
 
 .HomescheduleArea
 {
-    display: flex;
-    flex-direction: row;
+    width: 1000px;
+    height: 400px;
+    background-color: white;
+    margin: auto;
+    margin-top: 10px;
 }
-
 .daysH
 {
     display: flex;
@@ -47,11 +61,30 @@ body
     height: 400px;
 }
 
+.daysWO
+{
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    /* width: 200px;
+    height: 400px; */
+}
+
+.cB
+{
+    width: 30px;
+    height: 30px;
+    border: none;
+    outline: none;
+    margin-top: 355px;
+    margin-left: 120px;
+    margin: 0 auto;
+}
+
 .check{
-    margin-left: 15px;
-    width: 15px;
-    height: 15px;
-    text-align: right;
+display: flex;
+flex-direction: row;
+margin-top: 10px;
 
 }
 
@@ -121,7 +154,7 @@ body
 .Hbuttons
 {
     text-align: center;
-    margin-top: 25px;
+    margin-top: 50px;
 }
 
 .medicines

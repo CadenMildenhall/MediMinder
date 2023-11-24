@@ -1,30 +1,35 @@
-
 import { useEffect, useState } from 'react';
-import '../styles/Home.css'
-import { getMedicines } from '../Managers/MedicineManager';
-import { Link } from 'react-router-dom';
+import '../styles/Home.css';
+import { Link, useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
-import moment from 'moment';
 
-export const Home = () =>
- {
+export const Home = () => {
+  const [medicine, setMedicines] = useState([]);
+  const location = useLocation();
+  const { completedMedicines } = location.state || {};
+  // const [points, setPoints] = useState(1);
+  const [totalPoints, setTotalPoints] = useState(0);
+  const[weeks, setWeeks] = useState(1);
 
-    const [medicine, setMedicines] = useState([]);
-    const location = useLocation();
-    const { completedMedicines } = location.state || {};
+  const navigate = useNavigate();
 
 
-    useEffect(() => {
-        // Fetch medicine data from the server when the component mounts
-        getMedicines()
-          .then(data => {
-            setMedicines(data);
-          })
-          .catch(error => {
-            console.error('Error fetching medicine data: ', error);
-          });
-      }, []); 
+  const handleComplete = () => {
+    // setWeeks((prevweeks) => prevweeks + 1);
 
+    // updateWeeks(weeks);
+    // updatePoints(totalPoints)
+
+    navigate("/profilepage")
+  };
+  
+  
+
+  useEffect(() => {
+  
+    
+    });
+  
 return (
 
 <>
@@ -35,15 +40,145 @@ return (
          
     <div className="Homebuttons">
     <div className="HomescheduleArea">
-        <div className="daysH">
-          {completedMedicines &&
-            medicine.map((m) => (
-              <div key={m.id} className={m.day}>
-                <h6>{m.medicineName}: {m.time ? moment(m.time, 'HH:mm').format('hh:mm A') : 'No time selected'}</h6>
-                <input className='check' type='checkbox'></input>
-              </div>
+
+
+{!completedMedicines &&
+<div className="daysWO">
+    <div className="Monday"></div>
+    <div className="Tuesday"></div>
+    <div className="Wednesday"></div>
+    <div className="Thursday"></div>
+    <div className="Friday"></div>
+    <div className="Saturday"></div>
+    <div className="Sunday"></div>
+</div>    
+}
+
+    {completedMedicines &&
+    <div className="days">
+        
+          <div className="Monday">
+              {medicine
+              .filter((m) => m.day === "Monday")
+              .map((m, index) => (
+                <h6  key={m.medicineName + index}>{m.medicineName}: {m.dosage}mg - {m.time.format('hh:mm A')}</h6>
             ))}
-        </div>
+
+
+
+            </div>
+            <div className="Tuesday">
+            {medicine
+              .filter((m) => m.day === "Tuesday")
+              .map((m, index) => (
+                <h6  key={m.medicineName + index}>{m.medicineName}: {m.dosage}mg - {m.time.format('hh:mm A')}</h6>
+            ))}
+
+
+
+            </div>
+            <div className="Wednesday">
+            {medicine
+              .filter((m) => m.day === "Wednesday")
+              .map((m, index) => (
+                <h6  key={m.medicineName + index}>{m.medicineName}: {m.dosage}mg - {m.time.format('hh:mm A')}</h6>
+            ))}
+
+
+
+            </div>
+            <div className="Thursday">
+            {medicine
+              .filter((m) => m.day === "Thursday")
+              .map((m, index) => (
+                <h6  key={m.medicineName + index}>{m.medicineName}: {m.dosage}mg - {m.time.format('hh:mm A')}</h6>
+            ))}
+
+
+
+            </div>
+            <div className="Friday">
+            {medicine
+              .filter((m) => m.day === "Friday")
+              .map((m, index) => (
+                <h6  key={m.medicineName + index}>{m.medicineName}: {m.dosage}mg - {m.time.format('hh:mm A')}</h6>
+            ))}
+
+
+            </div>
+            <div className="Saturday">
+            {medicine
+              .filter((m) => m.day === "Saturday")
+              .map((m, index) => (
+                <h6  key={m.medicineName + index}>{m.medicineName}: {m.dosage}mg - {m.time.format('hh:mm A')}</h6>
+            ))}
+
+
+
+            </div>
+            <div className="Sunday">
+            {medicine
+              .filter((m) => m.day === "Sunday")
+              .map((m, index) => (
+                <h6  key={m.medicineName + index}>{m.medicineName}: {m.dosage}mg - {m.time.format('hh:mm A')}</h6>
+            ))}
+
+
+
+            </div>
+          </div>
+ }
+
+
+<div className='allCheck'>
+<div className='check'>
+<input
+  className='cB'
+  type='checkbox'
+  onChange={(e) => {
+    setTotalPoints((prevTotalPoints) => e.target.checked ? prevTotalPoints + 1 : prevTotalPoints - 1);
+  }}
+/><input
+  className='cB'
+  type='checkbox'
+  onChange={(e) => {
+    setTotalPoints((prevTotalPoints) => e.target.checked ? prevTotalPoints + 1 : prevTotalPoints - 1);
+  }}
+/><input
+  className='cB'
+  type='checkbox'
+  onChange={(e) => {
+    setTotalPoints((prevTotalPoints) => e.target.checked ? prevTotalPoints + 1 : prevTotalPoints - 1);
+  }}
+/><input
+  className='cB'
+  type='checkbox'
+  onChange={(e) => {
+    setTotalPoints((prevTotalPoints) => e.target.checked ? prevTotalPoints + 1 : prevTotalPoints - 1);
+  }}
+/><input
+  className='cB'
+  type='checkbox'
+  onChange={(e) => {
+    setTotalPoints((prevTotalPoints) => e.target.checked ? prevTotalPoints + 1 : prevTotalPoints - 1);
+  }}
+/><input
+  className='cB'
+  type='checkbox'
+  onChange={(e) => {
+    setTotalPoints((prevTotalPoints) => e.target.checked ? prevTotalPoints + 1 : prevTotalPoints - 1);
+  }}
+/><input
+  className='cB'
+  type='checkbox'
+  onChange={(e) => {
+    setTotalPoints((prevTotalPoints) => e.target.checked ? prevTotalPoints + 1 : prevTotalPoints - 1);
+  }}
+/>
+
+</div>
+</div>
+
       </div>
     </div>
       
@@ -57,10 +192,18 @@ return (
         </div>
 
     <div className='Hbuttons'>
-        <button className='complete'>
+        <button onClick={handleComplete} className='complete'>
             Complete
         </button>
     </div>
+
+        <div className='hPoints'>
+            <h1 className='hP'>
+                Points: {totalPoints}
+            </h1>
+        </div>
+
+
 </>
 
 );

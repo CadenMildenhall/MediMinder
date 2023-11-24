@@ -14,6 +14,84 @@
     margin-top: -250px;
 }
 
+.days
+{
+    font-family: fantasy;
+    font-size: x-small;
+    /* overflow-wrap: break-word;
+    overflow-y: auto;
+    overflow-x: hidden;
+    direction: ltr; */
+}
+
+.edit-form
+{
+    text-align: center;
+    margin-top: 15px;
+}
+
+.hEdit
+{
+    font-size: large;
+    font-family: fantasy;
+}
+
+.iEdit
+{
+    border-radius: 50px;
+    height: 25px;
+    width: 150px;
+    margin-left: 10px;
+    border: none;
+}
+
+.tEdit
+{
+    font-size: large;
+    font-family: fantasy;
+    border: none;
+}
+
+.medInput
+{
+     border-radius: 50px;
+     height: 25px;
+     width: 150px;
+     border: none;
+}
+
+.subButton
+{
+    border-radius: 50px;
+    height: 25px;
+    width: 100px;
+    background-color: white;
+    border: none;
+}
+
+.cancelButton
+{
+    border-radius: 50px;
+    height: 25px;
+    width: 100px;
+    background-color: white;
+    border: none;
+}
+
+.btn
+{
+    display: flex;
+    flex-direction:column;
+    align-items: center;
+    font-family: fantasy;
+}
+
+.btnTwo
+{
+    font-family: fantasy; 
+}
+
+
 .button
 {
     margin: auto;
@@ -72,4 +150,26 @@
 {
     background-color: black;
     color: white;
+}
+
+.cancelButton:hover
+{
+    background-color: black;
+    color: white;
+}
+
+.subButton:hover
+{
+    background-color: black;
+    color: white;
+}
+
+.cancelButton:active
+{
+    transform: scale(.9);
+}
+
+.cancelButton:active
+{
+    transform: scale(.9);
 }

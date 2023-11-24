@@ -1,5 +1,4 @@
 
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using MediMinder.Models;
@@ -10,10 +9,14 @@ public class MediMinderDbContext : IdentityDbContext<IdentityUser>
 {
     private readonly IConfiguration _configuration;
     public DbSet<UserProfile> UserProfiles { get; set; }
-    
+
     public DbSet<Medicine> Medicine { get; set; }
 
     public DbSet<Schedule> Schedule { get; set; }
+
+    public DbSet<Dosage> Dosages { get; set; }
+
+    public DbSet<MedicineDosage> MedicineDosages { get; set; }
 
     public MediMinderDbContext(DbContextOptions<MediMinderDbContext> context, IConfiguration config) : base(context)
     {
@@ -24,12 +27,21 @@ public class MediMinderDbContext : IdentityDbContext<IdentityUser>
     {
         base.OnModelCreating(modelBuilder);
 
-        // modelBuilder.Entity<IdentityRole>().HasData(new IdentityRole
-        // {
-        //     Id = "c3aaeb97-d2ba-4a53-a521-4eea61e59b35",
-        //     Name = "Admin",
-        //     NormalizedName = "admin"
-        // });
+    modelBuilder.Entity<Schedule>().HasKey(s => s.Id); 
+    modelBuilder.Entity<Schedule>().Property(s => s.Time).IsRequired();
+
+    modelBuilder.Entity<MedicineDosage>()
+        .HasKey(md => new { md.MedicineId, md.DosageId });
+
+    modelBuilder.Entity<MedicineDosage>()
+        .HasOne(md => md.Medicine)
+        .WithMany(m => m.MedicineDosages)
+        .HasForeignKey(md => md.MedicineId);
+
+    modelBuilder.Entity<MedicineDosage>()
+        .HasMany(md => md.Schedule)
+        .WithMany(s => s.MedicineDosages)
+        .UsingEntity(j => j.ToTable("ScheduleMedicineDosage"));
 
         modelBuilder.Entity<IdentityUser>().HasData(new IdentityUser[]
         {
@@ -47,14 +59,9 @@ public class MediMinderDbContext : IdentityDbContext<IdentityUser>
             },
         });
 
-        // modelBuilder.Entity<IdentityUserRole<string>>().HasData(new IdentityUserRole<string>
-        // {
-        //     RoleId = "c3aaeb97-d2ba-4a53-a521-4eea61e59b35",
-        //     UserId = "dbc40bc6-0829-4ac5-a3ed-180f5e916a5f"
-        // });
         modelBuilder.Entity<UserProfile>().HasData(new UserProfile[]
         {
-        
+
         new UserProfile{
             Id = 1,
             IdentityUserId = "dbc40bc6-0829-4ac5-a3ed-180f5e916a5f",
@@ -71,24 +78,150 @@ public class MediMinderDbContext : IdentityDbContext<IdentityUser>
         },
         });
 
-//////////////////////////////////////////////////
-
-
-      
-          modelBuilder.Entity<Medicine>().HasData(new Medicine[] //?
+        modelBuilder.Entity<Medicine>().HasData(new Medicine[]
         {
+        new Medicine
+        {
+            Id = 1,
+            MedicineName = "Advil"
+        },
+        new Medicine
+        {
+            Id = 2,
+            MedicineName = "Ibuprofin"
+        },
+        new Medicine
+        {
+            Id = 3,
+            MedicineName = "Aleve"
+        },
+        new Medicine
+        {
+            Id = 4,
+            MedicineName = "Claritin"
+        },
+        new Medicine
+        {
+            Id = 5,
+            MedicineName = "Tylenol"
+        },
+        new Medicine
+        {
+            Id = 6,
+            MedicineName = "Zyrtec"
+        }
+        });
+
+        modelBuilder.Entity<Schedule>().HasData(new Schedule[]
+        {
+        new Schedule
+        {
+            Id = 1,
+            Day = "Monday"
+        },
+                new Schedule
+        {
+            Id = 2,
+            Day = "Tuesday"
+        },
+                new Schedule
+        {
+            Id = 3,
+            Day = "Wednesday"
+        },
+                new Schedule
+        {
+            Id = 4,
+            Day = "Thursday"
+        },
+                new Schedule
+        {
+            Id = 5,
+            Day = "Friday"
+        },
+                new Schedule
+        {
+            Id = 6,
+            Day = "Saturday"
+        },
+                new Schedule
+        {
+            Id = 7,
+            Day = "Sunday"
+        },
+        });
+
+        modelBuilder.Entity<Dosage>().HasData(new Dosage[]
+        {
+        new Dosage
+        {
+            Id = 1,
+            Amount = 5
+        },
+        new Dosage
+        {
+            Id = 2,
+            Amount = 10
+        },
+        new Dosage
+        {
+            Id = 3,
+            Amount = 15
+        },
+        new Dosage
+        {
+            Id = 4,
+            Amount = 20
+        },
+        new Dosage
+        {
+            Id = 5,
+            Amount = 30
+        },
+        new Dosage
+        {
+            Id = 6,
+            Amount = 35
+        }
 
         });
 
-//////////
 
-      modelBuilder.Entity<Schedule>().HasData(new Schedule[] //?
+        modelBuilder.Entity<MedicineDosage>().HasData(new MedicineDosage[]
         {
-
+            new MedicineDosage
+            {
+                MedicineId = 1,
+                DosageId = 1
+            },
+            new MedicineDosage
+            {
+                MedicineId = 2,
+                DosageId = 2,
+            },
+                        new MedicineDosage
+            {
+                MedicineId = 3,
+                DosageId = 3,
+            },
+                        new MedicineDosage
+            {
+                MedicineId = 4,
+                DosageId = 4,
+            },
+                        new MedicineDosage
+            {
+                MedicineId = 5,
+                DosageId = 5,
+            },
+                        new MedicineDosage
+            {
+                MedicineId = 6,
+                DosageId = 6,
+            }
         });
+
 
     }
-
-    
-    
 }
+

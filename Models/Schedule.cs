@@ -1,13 +1,21 @@
 
 
-using System;
-namespace MediMinder.Models;
+using System.ComponentModel.DataAnnotations;
+using System.Runtime.InteropServices.JavaScript;
+using System.Text.Json.Serialization;
 
-public class Schedule
+namespace MediMinder.Models
 {
-    public int Id { get; set; }
-    public int MedicineId { get; set; }
-    public int UserId { get; set; }
-    public DateTime Time { get; set; }
-    public string Day { get; set; }
+    public class Schedule
+    {
+        public int Id { get; set; }
+
+        [Required(ErrorMessage = "The Time field is required.")]
+        public DateTime Time { get; set; }
+        
+        [Required(ErrorMessage = "The day field is required.")]
+        public string Day { get; set; }
+        [JsonIgnore]
+        public ICollection<MedicineDosage> MedicineDosages { get; set; }
+    }
 }

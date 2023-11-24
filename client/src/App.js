@@ -8,7 +8,7 @@ import ApplicationViews from "./Components/ApplicationViews";
 import { Route, Routes } from "react-router-dom";
 import { Home } from "./Components/Home";
 import { Schedule } from "./Components/Schedule";
-import { NewSchedule } from "./Components/NewSchedule";
+import { NewSchedule } from "./Components/NewSchedule"
 import { ProfilePage } from "./Components/ProfilePage";
 
 function App() {

@@ -38,6 +38,18 @@
     margin: 10px; /* Add margin to create space between elements */
   }
 
+  ::-webkit-scrollbar{
+    background-color: white;
+    border-radius: 50px;
+    height: fit-content;
+    width: 7px;
+}
+
+::-webkit-scrollbar-thumb{
+    background-color: black;
+    border-radius: 50px;
+}
+
 .days
 {
     display: flex;
@@ -45,8 +57,26 @@
     text-align: center;
 }
 
+.dosage
+{
+    border-radius: 50px;
+    border: none;
+    width: 150px;
+    text-align: center;
+    height: 25px;
+    margin-top: 10px;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
 .Monday
 {
+
+    overflow-wrap: break-word;
+    overflow-y: auto;
+    overflow-x: hidden;
+    direction: rtl;
+
     width: 200px;
     height: 400px;
     background-color: beige;
@@ -57,10 +87,21 @@
     width: 200px;
     height: 400px;   
     background-color: lightgreen;
+
+    overflow-wrap: break-word;
+    overflow-y: auto;
+    overflow-x: hidden;
+    direction: rtl;
 }
 
 .Wednesday
 {
+
+    overflow-wrap: break-word;
+    overflow-y: auto;
+    overflow-x: hidden;
+    direction: rtl;
+
     width: 200px;
     height: 400px;
     background-color: lightblue;
@@ -68,6 +109,12 @@
 
 .Thursday
 {
+
+    overflow-wrap: break-word;
+    overflow-y: auto;
+    overflow-x: hidden;
+    direction: rtl;
+
     width: 200px;
     height: 400px;
     background-color: lightgray;
@@ -75,6 +122,12 @@
 
 .Friday
 {
+
+    overflow-wrap: break-word;
+    overflow-y: auto;
+    overflow-x: hidden;
+    direction: rtl;
+
     width: 200px;
     height: 400px;
     background-color: lightpink;
@@ -82,6 +135,12 @@
 
 .Saturday
 {
+    overflow-wrap: break-word;
+    overflow-y: auto;
+    overflow-x: hidden;
+    direction: rtl;
+
+
     width: 200px;
     height: 400px;
     background-color: lightgoldenrodyellow;
@@ -89,6 +148,12 @@
 
 .Sunday
 {
+    overflow-wrap: break-word;
+    overflow-y: auto;
+    overflow-x: hidden;
+    direction: rtl;
+
+
     width: 200px;
     height: 400px;
     background-color: lightcyan;
@@ -148,6 +213,12 @@
     font-family: fantasy;
 
     margin-top: 20px;
+}
+
+.scheduleArea
+{
+    display: flex;
+    flex-direction: row;
 }
 
 .cSchedule

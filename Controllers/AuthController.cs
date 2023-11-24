@@ -100,7 +100,7 @@ public class AuthController : ControllerBase
     {
         var identityUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         var profile = _dbContext.UserProfiles.SingleOrDefault(up => up.IdentityUserId == identityUserId);
-        // var roles = User.FindAll(ClaimTypes.Role).Select(r => r.Value).ToList();
+
         if (profile != null)
         {
             profile.UserName = User.FindFirstValue(ClaimTypes.Name);
