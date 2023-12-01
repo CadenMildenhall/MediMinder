@@ -82,7 +82,9 @@ namespace MediMinder.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Time = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    Day = table.Column<string>(type: "text", nullable: false)
+                    Day = table.Column<string>(type: "text", nullable: false),
+                    MedicineId = table.Column<int>(type: "integer", nullable: false),
+                    DosageId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -222,46 +224,44 @@ namespace MediMinder.Migrations
                 name: "MedicineDosages",
                 columns: table => new
                 {
-                    MedicineId = table.Column<int>(type: "integer", nullable: false),
-                    DosageId = table.Column<int>(type: "integer", nullable: false),
                     Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    MedicineId = table.Column<int>(type: "integer", nullable: true),
+                    DosageId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MedicineDosages", x => new { x.MedicineId, x.DosageId });
+                    table.PrimaryKey("PK_MedicineDosages", x => x.Id);
                     table.ForeignKey(
                         name: "FK_MedicineDosages_Dosages_DosageId",
                         column: x => x.DosageId,
                         principalTable: "Dosages",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_MedicineDosages_Medicine_MedicineId",
                         column: x => x.MedicineId,
                         principalTable: "Medicine",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "ScheduleMedicineDosage",
+                name: "scheduleMedicineDosages",
                 columns: table => new
                 {
                     ScheduleId = table.Column<int>(type: "integer", nullable: false),
-                    MedicineDosagesMedicineId = table.Column<int>(type: "integer", nullable: false),
-                    MedicineDosagesDosageId = table.Column<int>(type: "integer", nullable: false)
+                    MedicineDosageId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ScheduleMedicineDosage", x => new { x.ScheduleId, x.MedicineDosagesMedicineId, x.MedicineDosagesDosageId });
+                    table.PrimaryKey("PK_scheduleMedicineDosages", x => new { x.ScheduleId, x.MedicineDosageId });
                     table.ForeignKey(
-                        name: "FK_ScheduleMedicineDosage_MedicineDosages_MedicineDosagesMedic~",
-                        columns: x => new { x.MedicineDosagesMedicineId, x.MedicineDosagesDosageId },
+                        name: "FK_scheduleMedicineDosages_MedicineDosages_MedicineDosageId",
+                        column: x => x.MedicineDosageId,
                         principalTable: "MedicineDosages",
-                        principalColumns: new[] { "MedicineId", "DosageId" },
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ScheduleMedicineDosage_Schedule_ScheduleId",
+                        name: "FK_scheduleMedicineDosages_Schedule_ScheduleId",
                         column: x => x.ScheduleId,
                         principalTable: "Schedule",
                         principalColumn: "Id",
@@ -273,8 +273,8 @@ namespace MediMinder.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { "dbc40bc6-0829-4ac5-a3ed-180f5e916a5f", 0, "6f8cd1ce-4579-4df8-a799-60ac166fb928", "admina@strator.comx", false, false, null, null, null, "AQAAAAIAAYagAAAAEERWV5cQOipwJOPiVXkE+WhbBFwe4nf1E/ObHtLzAkFsT67kqFXUg8w9ZlsPKCq6/A==", null, false, "e784df1e-193a-4cf5-9f5f-b243709c29c6", false, "Administrator" },
-                    { "dbc40bc6-0829-4ac5-a3ed-180f5e916a5s", 0, "caf1d85b-8e6e-47ea-a1a1-ac1824c7a296", "milde@nhall.comx", false, false, null, null, null, "AQAAAAIAAYagAAAAEEItVKoPDIFHvYQ2tRAlCPHvxFmW7XthPXJyw7IWvGYatdp5zVe3U7Uz3SGU9VBUHQ==", null, false, "4c67341b-2adb-4dcc-afd5-d28958b4d209", false, "caden" }
+                    { "dbc40bc6-0829-4ac5-a3ed-180f5e916a5f", 0, "e09f5255-20a0-464c-b1ed-683d58050032", "admina@strator.comx", false, false, null, null, null, "AQAAAAIAAYagAAAAEG4VcicERrpROe/j47v7Gdw3i/r+Bi4dJjwbZU8cTf6GfRx2Hf1tYf8AoLQrh6p1Sw==", null, false, "4e25c548-e629-4fa2-b413-a29ad79c97a8", false, "Administrator" },
+                    { "dbc40bc6-0829-4ac5-a3ed-180f5e916a5s", 0, "80c9f364-21d2-4836-8cc7-4ffdf8071284", "milde@nhall.comx", false, false, null, null, null, "AQAAAAIAAYagAAAAEPnzL0Aw3QY26rAq3MkndkK4GaXfKnyCol2pqDVB2qiSYYsrdpU5nBgS2gXStSzzmg==", null, false, "b4d4e5ed-4c5e-4f6b-84d3-e9e5b025e7e9", false, "caden" }
                 });
 
             migrationBuilder.InsertData(
@@ -305,29 +305,29 @@ namespace MediMinder.Migrations
 
             migrationBuilder.InsertData(
                 table: "Schedule",
-                columns: new[] { "Id", "Day", "Time" },
+                columns: new[] { "Id", "Day", "DosageId", "MedicineId", "Time" },
                 values: new object[,]
                 {
-                    { 1, "Monday", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 2, "Tuesday", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 3, "Wednesday", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 4, "Thursday", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 5, "Friday", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 6, "Saturday", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 7, "Sunday", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
+                    { 1, "Monday", 0, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 2, "Tuesday", 0, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 3, "Wednesday", 0, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 4, "Thursday", 0, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 5, "Friday", 0, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 6, "Saturday", 0, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 7, "Sunday", 0, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
                 });
 
             migrationBuilder.InsertData(
                 table: "MedicineDosages",
-                columns: new[] { "DosageId", "MedicineId", "Id" },
+                columns: new[] { "Id", "DosageId", "MedicineId" },
                 values: new object[,]
                 {
-                    { 1, 1, 0 },
-                    { 2, 2, 0 },
-                    { 3, 3, 0 },
-                    { 4, 4, 0 },
-                    { 5, 5, 0 },
-                    { 6, 6, 0 }
+                    { 1, 1, 1 },
+                    { 2, 2, 2 },
+                    { 3, 3, 3 },
+                    { 4, 4, 4 },
+                    { 5, 5, 5 },
+                    { 6, 6, 6 }
                 });
 
             migrationBuilder.InsertData(
@@ -382,9 +382,14 @@ namespace MediMinder.Migrations
                 column: "DosageId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ScheduleMedicineDosage_MedicineDosagesMedicineId_MedicineDo~",
-                table: "ScheduleMedicineDosage",
-                columns: new[] { "MedicineDosagesMedicineId", "MedicineDosagesDosageId" });
+                name: "IX_MedicineDosages_MedicineId",
+                table: "MedicineDosages",
+                column: "MedicineId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_scheduleMedicineDosages_MedicineDosageId",
+                table: "scheduleMedicineDosages",
+                column: "MedicineDosageId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserProfiles_IdentityUserId",
@@ -410,7 +415,7 @@ namespace MediMinder.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "ScheduleMedicineDosage");
+                name: "scheduleMedicineDosages");
 
             migrationBuilder.DropTable(
                 name: "UserProfiles");

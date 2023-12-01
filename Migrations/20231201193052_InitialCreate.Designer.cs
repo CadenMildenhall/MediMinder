@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MediMinder.Migrations
 {
     [DbContext(typeof(MediMinderDbContext))]
-    [Migration("20231120180951_InitialCreate")]
+    [Migration("20231201193052_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,24 +23,6 @@ namespace MediMinder.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("MedicineDosageSchedule", b =>
-                {
-                    b.Property<int>("ScheduleId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("MedicineDosagesMedicineId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("MedicineDosagesDosageId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("ScheduleId", "MedicineDosagesMedicineId", "MedicineDosagesDosageId");
-
-                    b.HasIndex("MedicineDosagesMedicineId", "MedicineDosagesDosageId");
-
-                    b.ToTable("ScheduleMedicineDosage", (string)null);
-                });
 
             modelBuilder.Entity("MediMinder.Models.Dosage", b =>
                 {
@@ -141,57 +123,62 @@ namespace MediMinder.Migrations
 
             modelBuilder.Entity("MediMinder.Models.MedicineDosage", b =>
                 {
-                    b.Property<int>("MedicineId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("DosageId")
-                        .HasColumnType("integer");
-
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    b.HasKey("MedicineId", "DosageId");
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("DosageId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("MedicineId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("DosageId");
+
+                    b.HasIndex("MedicineId");
 
                     b.ToTable("MedicineDosages");
 
                     b.HasData(
                         new
                         {
-                            MedicineId = 1,
+                            Id = 1,
                             DosageId = 1,
-                            Id = 0
+                            MedicineId = 1
                         },
                         new
                         {
-                            MedicineId = 2,
+                            Id = 2,
                             DosageId = 2,
-                            Id = 0
+                            MedicineId = 2
                         },
                         new
                         {
-                            MedicineId = 3,
+                            Id = 3,
                             DosageId = 3,
-                            Id = 0
+                            MedicineId = 3
                         },
                         new
                         {
-                            MedicineId = 4,
+                            Id = 4,
                             DosageId = 4,
-                            Id = 0
+                            MedicineId = 4
                         },
                         new
                         {
-                            MedicineId = 5,
+                            Id = 5,
                             DosageId = 5,
-                            Id = 0
+                            MedicineId = 5
                         },
                         new
                         {
-                            MedicineId = 6,
+                            Id = 6,
                             DosageId = 6,
-                            Id = 0
+                            MedicineId = 6
                         });
                 });
 
@@ -207,6 +194,12 @@ namespace MediMinder.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("DosageId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("MedicineId")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("Time")
                         .HasColumnType("timestamp without time zone");
 
@@ -219,44 +212,73 @@ namespace MediMinder.Migrations
                         {
                             Id = 1,
                             Day = "Monday",
+                            DosageId = 0,
+                            MedicineId = 0,
                             Time = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 2,
                             Day = "Tuesday",
+                            DosageId = 0,
+                            MedicineId = 0,
                             Time = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 3,
                             Day = "Wednesday",
+                            DosageId = 0,
+                            MedicineId = 0,
                             Time = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 4,
                             Day = "Thursday",
+                            DosageId = 0,
+                            MedicineId = 0,
                             Time = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 5,
                             Day = "Friday",
+                            DosageId = 0,
+                            MedicineId = 0,
                             Time = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 6,
                             Day = "Saturday",
+                            DosageId = 0,
+                            MedicineId = 0,
                             Time = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 7,
                             Day = "Sunday",
+                            DosageId = 0,
+                            MedicineId = 0,
                             Time = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
+                });
+
+            modelBuilder.Entity("MediMinder.Models.ScheduleMedicineDosage", b =>
+                {
+                    b.Property<int>("ScheduleId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("MedicineDosageId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ScheduleId", "MedicineDosageId");
+
+                    b.HasIndex("MedicineDosageId");
+
+                    b.ToTable("scheduleMedicineDosages");
                 });
 
             modelBuilder.Entity("MediMinder.Models.UserProfile", b =>
@@ -436,13 +458,13 @@ namespace MediMinder.Migrations
                         {
                             Id = "dbc40bc6-0829-4ac5-a3ed-180f5e916a5f",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "6f8cd1ce-4579-4df8-a799-60ac166fb928",
+                            ConcurrencyStamp = "e09f5255-20a0-464c-b1ed-683d58050032",
                             Email = "admina@strator.comx",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAIAAYagAAAAEERWV5cQOipwJOPiVXkE+WhbBFwe4nf1E/ObHtLzAkFsT67kqFXUg8w9ZlsPKCq6/A==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEG4VcicERrpROe/j47v7Gdw3i/r+Bi4dJjwbZU8cTf6GfRx2Hf1tYf8AoLQrh6p1Sw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "e784df1e-193a-4cf5-9f5f-b243709c29c6",
+                            SecurityStamp = "4e25c548-e629-4fa2-b413-a29ad79c97a8",
                             TwoFactorEnabled = false,
                             UserName = "Administrator"
                         },
@@ -450,13 +472,13 @@ namespace MediMinder.Migrations
                         {
                             Id = "dbc40bc6-0829-4ac5-a3ed-180f5e916a5s",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "caf1d85b-8e6e-47ea-a1a1-ac1824c7a296",
+                            ConcurrencyStamp = "80c9f364-21d2-4836-8cc7-4ffdf8071284",
                             Email = "milde@nhall.comx",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAIAAYagAAAAEEItVKoPDIFHvYQ2tRAlCPHvxFmW7XthPXJyw7IWvGYatdp5zVe3U7Uz3SGU9VBUHQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPnzL0Aw3QY26rAq3MkndkK4GaXfKnyCol2pqDVB2qiSYYsrdpU5nBgS2gXStSzzmg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "4c67341b-2adb-4dcc-afd5-d28958b4d209",
+                            SecurityStamp = "b4d4e5ed-4c5e-4f6b-84d3-e9e5b025e7e9",
                             TwoFactorEnabled = false,
                             UserName = "caden"
                         });
@@ -543,38 +565,38 @@ namespace MediMinder.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("MedicineDosageSchedule", b =>
-                {
-                    b.HasOne("MediMinder.Models.Schedule", null)
-                        .WithMany()
-                        .HasForeignKey("ScheduleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MediMinder.Models.MedicineDosage", null)
-                        .WithMany()
-                        .HasForeignKey("MedicineDosagesMedicineId", "MedicineDosagesDosageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("MediMinder.Models.MedicineDosage", b =>
                 {
                     b.HasOne("MediMinder.Models.Dosage", "Dosage")
-                        .WithMany()
-                        .HasForeignKey("DosageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("MedicineDosages")
+                        .HasForeignKey("DosageId");
 
                     b.HasOne("MediMinder.Models.Medicine", "Medicine")
                         .WithMany("MedicineDosages")
-                        .HasForeignKey("MedicineId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("MedicineId");
 
                     b.Navigation("Dosage");
 
                     b.Navigation("Medicine");
+                });
+
+            modelBuilder.Entity("MediMinder.Models.ScheduleMedicineDosage", b =>
+                {
+                    b.HasOne("MediMinder.Models.MedicineDosage", "MedicineDosage")
+                        .WithMany("ScheduleMedicineDosages")
+                        .HasForeignKey("MedicineDosageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MediMinder.Models.Schedule", "Schedule")
+                        .WithMany("ScheduleMedicineDosages")
+                        .HasForeignKey("ScheduleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MedicineDosage");
+
+                    b.Navigation("Schedule");
                 });
 
             modelBuilder.Entity("MediMinder.Models.UserProfile", b =>
@@ -637,9 +659,24 @@ namespace MediMinder.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("MediMinder.Models.Dosage", b =>
+                {
+                    b.Navigation("MedicineDosages");
+                });
+
             modelBuilder.Entity("MediMinder.Models.Medicine", b =>
                 {
                     b.Navigation("MedicineDosages");
+                });
+
+            modelBuilder.Entity("MediMinder.Models.MedicineDosage", b =>
+                {
+                    b.Navigation("ScheduleMedicineDosages");
+                });
+
+            modelBuilder.Entity("MediMinder.Models.Schedule", b =>
+                {
+                    b.Navigation("ScheduleMedicineDosages");
                 });
 #pragma warning restore 612, 618
         }

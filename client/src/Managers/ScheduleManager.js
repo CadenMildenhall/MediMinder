@@ -1,48 +1,87 @@
-import { createMedicineDosage } from "./MedicineDosageManager";
+// Import necessary functions and constants
+import { createMedicineDosage as createMedicineDosageForSchedule } from "./MedicineDosageManager";
+
+// API URLs
 const sApiUrl = "/api/schedule";
+const mDapiUrl = "/api/medicinedosage";
 
+// Function to get schedule
+export const getSchedule = () => {
+  return fetch(sApiUrl).then((res) => res.json());
+};
 
-export const getSchedule = () =>
-{
-    return fetch(sApiUrl).then((res) => res.json());
-}
+// Function to create MedicineDosage and Schedule
+export const createMedicineDosageAndSchedule = async (medicineId, dosageId, selectValue) => {
+  try {
+    // Create MedicineDosage
+    const createdMedicineDosage = await createMedicineDosageForSchedule(medicineId, dosageId);
 
-export const createMedicineDosageAndSchedule = async (medicineId, dosageId, selectValue, time) => {
-    try {
-        // Await the completion of createMedicineDosage
-        await createMedicineDosage(medicineId, dosageId);
+    // Create Schedule data object
+    const scheduleData = {
+      medicineId: createdMedicineDosage.medicineId,
+      dosageId: createdMedicineDosage.dosageId,
+      day: selectValue,
+    //   time: time.format("HH:mm"),
+    } ;
 
-        const formattedTime = time.format("HH:mm");
-        console.log("Formatted Time:", formattedTime);
+    console.log(scheduleData);
 
-        // Create the data object to be sent in the request
-        const requestData = {
-            MedicineId: medicineId,
-            DosageId: dosageId,
-        };
+    // Fetch request to create Schedule
+    const scheduleResponse = await fetch(sApiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(scheduleData),
+    });
 
-        // Await the completion of the fetch request
-        const response = await fetch(sApiUrl, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(requestData),
-        });
-
-        if (!response.ok) {
-            console.error(`HTTP error! Status: ${response.status}`);
-            const responseText = await response.text();
-            console.error(responseText);
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        // Parse and return the JSON response
-        return response.json();
-    } catch (error) {
-        console.error("Error creating medicine dosage and schedule:", error);
-        throw error;
+    if (!scheduleResponse.ok) {
+      throw new Error(`Schedule creation failed. HTTP error! Status: ${scheduleResponse.status}`);
     }
+
+    // Parse and return the JSON response for Schedule
+    return scheduleResponse.json();
+  } catch (error) {
+    console.error("Error creating medicine dosage and schedule:", error);
+    throw error;
+  }
+};
+
+// Function to get MedicineDosages
+export const getMedicineDosages = () => {
+  return fetch(mDapiUrl).then((res) => res.json());
+};
+
+// Function to create MedicineDosage
+export const createMedicineDosage = (medicineId, dosageId) => {
+  const data = {
+    MedicineId: medicineId,
+    DosageId: dosageId,
+  };
+
+  console.log(data);
+
+  return fetch(mDapiUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error(`HTTP error! Status: ${res.status}`);
+      }
+      return res.json();
+    })
+    .then((createdMedicineDosage) => {
+      // You can return the createdMedicineDosage if needed
+      return createdMedicineDosage;
+    })
+    .catch((error) => {
+      console.error("Error creating medicine dosage:", error);
+      throw error;
+    });
 };
 
 

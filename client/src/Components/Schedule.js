@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "../styles/Schedule.css";
 import { getMedicines } from "../Managers/MedicineManager";
-import { TimePicker } from "antd";
+import { DatePicker, TimePicker } from "antd";
 import "antd/lib/date-picker/style";
 import { getDosages } from "../Managers/DosageManager";
 import { getSchedule } from "../Managers/ScheduleManager";
 import { useNavigate } from "react-router-dom";
 import { createMedicineDosageAndSchedule } from "../Managers/ScheduleManager";
-import { createMedicineDosage } from "../Managers/MedicineDosageManager";
+import { createMedicineDosage, getMedicineDosages } from "../Managers/MedicineDosageManager";
 
 export const Schedule = ({ onComplete }) => {
   const [inputValue, setInputValue] = useState("");
@@ -17,6 +17,7 @@ export const Schedule = ({ onComplete }) => {
   const [medicines, setMedicines] = useState([]);
   const [time, setTime] = useState(null);
   const [days, setDays] = useState([]);
+  const [medicineDosages, setMedicineDosage] = useState([]);
 
   const [scheduleEntries, setScheduleEntries] = useState([])
 
@@ -36,49 +37,70 @@ export const Schedule = ({ onComplete }) => {
       setDosage(dosageData); // fetches the dosage data and assigns it to the variable "dosage"
     });
 
+    getMedicineDosages().then((medicineDosages) => {
+      setMedicineDosage(medicineDosages);
+    })
+
   }
     , []);
 
     const handleSubmit = async () => {
+
       console.log("Time:", time);
-  
+    
       // Find selected objects based on user input
+      console.log("Days Array:", days);
+      console.log("Selected Day Value:", selectValue);
       const selectedDay = days.find((day) => day.day === selectValue);
+      console.log("Selected Day Object:", selectedDay);
+      
+
+
+
       const selectedMedicine = medicines.find((medicine) => medicine.medicineName === inputValue);
       const selectedDosage = dosage.find((d) => d.amount === parseInt(dosageValue));
-  
+    
       console.log(selectedDosage);
       console.log(selectedMedicine);
-  
+      console.log(selectedDay);
+
       if (selectedDay && selectedMedicine && selectedDosage && time) {
-          try {
-              // Create a new MedicineDosage
-              const createdMedicineDosage = await createMedicineDosage(selectedMedicine.id, selectedDosage.id);
-  
-              // Create a new Schedule entry with the MedicineDosage association
-              const data = await createMedicineDosageAndSchedule(
-                  createdMedicineDosage.MedicineId,
-                  createdMedicineDosage.DosageId,
-                  selectedDay.day,
-                  time
-              );
-  
-              // Update local state with the new schedule entry
-              setScheduleEntries([...scheduleEntries, data]);
-  
-              // Clear form fields and update state
-              setSelectValue("");
-              setInputValue("");
-              setDosageValue("");
-              setTime(null);
-  
-              console.log(data);
-          } catch (error) {
-              console.error("Error handling submit:", error);
-          }
+        try {
+
+          // Create a new MedicineDosage
+          await createMedicineDosage(selectedMedicine.id, selectedDosage.id);
+
+          console.log("createdMedDose:", createMedicineDosage);
+          
+    
+          // Create a new Schedule entry with the MedicineDosage association
+          const data = await createMedicineDosageAndSchedule(
+            selectedMedicine.id,
+            selectedDosage.id,
+            selectValue,
+            time
+          ).catch(error => console.error("Error in createMedicineDosageAndSchedule:", error));;
+
+          console.log("selectedMedicineId:", selectedMedicine.id);
+    
+          console.log("Response from createMedicineDosageAndSchedule:", data);
+    
+          // Update local state with the new schedule entry
+          setScheduleEntries([...scheduleEntries, data]);
+          console.log("schedule entry:" , scheduleEntries);
+    
+          // Clear form fields and update state
+          setSelectValue("");
+          setInputValue("");
+          setDosageValue("");
+          setTime(null);
+        } catch (error) {
+          console.error("Error handling submit:", error);
+          console.error("Error details:", error); // Add this line
+        }
       }
-  };
-  
+    };
+    
 
   const handleComplete = (e) => {
     onComplete = true;
@@ -129,10 +151,10 @@ export const Schedule = ({ onComplete }) => {
             ))}
         </select>
 
-        <TimePicker
+        <DatePicker
+          type="datetime-local"
           onChange={newTime => setTime(newTime)}
           value={time}
-          format="HH:mm"
           className="timeInput" />
 
         <select

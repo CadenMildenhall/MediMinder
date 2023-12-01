@@ -18,6 +18,8 @@ public class MediMinderDbContext : IdentityDbContext<IdentityUser>
 
     public DbSet<MedicineDosage> MedicineDosages { get; set; }
 
+    public DbSet<ScheduleMedicineDosage> scheduleMedicineDosages { get; set; }
+
     public MediMinderDbContext(DbContextOptions<MediMinderDbContext> context, IConfiguration config) : base(context)
     {
         _configuration = config;
@@ -27,21 +29,23 @@ public class MediMinderDbContext : IdentityDbContext<IdentityUser>
     {
         base.OnModelCreating(modelBuilder);
 
-    modelBuilder.Entity<Schedule>().HasKey(s => s.Id); 
-    modelBuilder.Entity<Schedule>().Property(s => s.Time).IsRequired();
+modelBuilder.Entity<ScheduleMedicineDosage>()
+    .HasKey(smd => new { smd.ScheduleId, smd.MedicineDosageId });
 
-    modelBuilder.Entity<MedicineDosage>()
-        .HasKey(md => new { md.MedicineId, md.DosageId });
+modelBuilder.Entity<ScheduleMedicineDosage>()
+    .HasOne(smd => smd.Schedule)
+    .WithMany(s => s.ScheduleMedicineDosages)
+    .HasForeignKey(smd => smd.ScheduleId);
 
-    modelBuilder.Entity<MedicineDosage>()
-        .HasOne(md => md.Medicine)
-        .WithMany(m => m.MedicineDosages)
-        .HasForeignKey(md => md.MedicineId);
+modelBuilder.Entity<ScheduleMedicineDosage>()
+    .HasOne(smd => smd.MedicineDosage)
+    .WithMany(md => md.ScheduleMedicineDosages)
+    .HasForeignKey(smd => smd.MedicineDosageId); // Use MedicineDosageId here
 
-    modelBuilder.Entity<MedicineDosage>()
-        .HasMany(md => md.Schedule)
-        .WithMany(s => s.MedicineDosages)
-        .UsingEntity(j => j.ToTable("ScheduleMedicineDosage"));
+
+
+
+
 
         modelBuilder.Entity<IdentityUser>().HasData(new IdentityUser[]
         {
@@ -191,31 +195,37 @@ public class MediMinderDbContext : IdentityDbContext<IdentityUser>
         {
             new MedicineDosage
             {
+                Id = 1,
                 MedicineId = 1,
                 DosageId = 1
             },
             new MedicineDosage
             {
+                Id = 2,
                 MedicineId = 2,
                 DosageId = 2,
             },
                         new MedicineDosage
             {
+                Id = 3,
                 MedicineId = 3,
                 DosageId = 3,
             },
                         new MedicineDosage
             {
+                Id = 4,
                 MedicineId = 4,
                 DosageId = 4,
             },
                         new MedicineDosage
             {
+                Id = 5,
                 MedicineId = 5,
                 DosageId = 5,
             },
                         new MedicineDosage
             {
+                Id = 6,
                 MedicineId = 6,
                 DosageId = 6,
             }

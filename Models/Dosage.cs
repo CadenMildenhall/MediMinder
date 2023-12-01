@@ -11,6 +11,7 @@ public class Dosage
 {
     public int Id { get; set; }
     public int Amount { get; set; }
+    public List<MedicineDosage> MedicineDosages { get; set; }
 
 
 }
