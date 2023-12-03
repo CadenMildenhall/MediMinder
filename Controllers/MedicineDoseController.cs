@@ -1,23 +1,22 @@
-
-
 using MediMinder.Data;
 using MediMinder.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
 
 [ApiController]
 [Route("api/[controller]")]
 public class MedicineDosageController : ControllerBase
 {
-    private MediMinderDbContext _dbContext;
+    private readonly MediMinderDbContext _dbContext;
 
     public MedicineDosageController(MediMinderDbContext context)
     {
         _dbContext = context;
     }
 
- [HttpPost]
+    [HttpPost]
     public IActionResult Create([FromBody] MedicineDosage medicineDosage)
     {
         try
@@ -27,6 +26,17 @@ public class MedicineDosageController : ControllerBase
             {
                 return BadRequest(ModelState);
             }
+
+            // Find the Schedule to associate with
+            var existingSchedule = _dbContext.Schedule.FirstOrDefault(s => s.Id == medicineDosage.Schedule.Id);
+
+            if (existingSchedule == null)
+            {
+                return NotFound("Associated Schedule not found");
+            }
+
+            // Associate the MedicineDosage with the Schedule
+            medicineDosage.Schedule = existingSchedule;
 
             // Add the new medicineDosage entry to the database
             _dbContext.MedicineDosages.Add(medicineDosage);
@@ -42,36 +52,34 @@ public class MedicineDosageController : ControllerBase
         }
     }
 
-
     // Add other actions if needed
 
     // For example, to get all medicineDosages
     [HttpGet]
     public IActionResult Get()
     {
-        return Ok(_dbContext.MedicineDosages);
+        var medicineDosages = _dbContext.MedicineDosages
+            .Include(md => md.Schedule)
+            .ToList();
+
+        return Ok(medicineDosages);
     }
 
-[HttpGet("{id}")]
-public IActionResult Get(int id)
-{
-    var medicineDosage = _dbContext.MedicineDosages
-        .Include(md => md.ScheduleMedicineDosages)
-        .FirstOrDefault(md => md.Id == id);
-
-    if (medicineDosage == null)
+    [HttpGet("{id}")]
+    public IActionResult Get(int id)
     {
-        return NotFound();
+        var medicineDosage = _dbContext.MedicineDosages
+            .Include(md => md.Schedule)
+            .FirstOrDefault(md => md.Id == id);
+
+        if (medicineDosage == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(medicineDosage);
     }
-
-    return Ok(medicineDosage);
 }
-
-
-}
-
-
-
 
 
 

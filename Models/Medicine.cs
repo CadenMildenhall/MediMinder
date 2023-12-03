@@ -7,6 +7,7 @@ public class Medicine
 {
     public int Id { get; set; }
     public string MedicineName { get; set; }
-    public List<MedicineDosage> MedicineDosages { get; set; }
+
+    public ICollection<MedicineDosage> MedicineDosages { get; set; }
 
 }

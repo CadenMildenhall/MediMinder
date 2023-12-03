@@ -14,15 +14,14 @@ export const getSchedule = () => {
 export const createMedicineDosageAndSchedule = async (medicineId, dosageId, selectValue) => {
   try {
     // Create MedicineDosage
-    const createdMedicineDosage = await createMedicineDosageForSchedule(medicineId, dosageId);
+    const createdMedicineDosage = await createMedicineDosageForSchedule(medicineId, dosageId, ScheduleId);
 
     // Create Schedule data object
     const scheduleData = {
-      medicineId: createdMedicineDosage.medicineId,
-      dosageId: createdMedicineDosage.dosageId,
+      MedicineDosageId: createdMedicineDosage.id,  // Assuming the ID property of MedicineDosage
       day: selectValue,
-    //   time: time.format("HH:mm"),
-    } ;
+      // Add other properties as needed
+    };
 
     console.log(scheduleData);
 
@@ -53,10 +52,11 @@ export const getMedicineDosages = () => {
 };
 
 // Function to create MedicineDosage
-export const createMedicineDosage = (medicineId, dosageId) => {
+export const createMedicineDosage = (medicineId, dosageId, ScheduleId) => {
   const data = {
     MedicineId: medicineId,
     DosageId: dosageId,
+    ScheduleId: scheduleId
   };
 
   console.log(data);
@@ -83,8 +83,6 @@ export const createMedicineDosage = (medicineId, dosageId) => {
       throw error;
     });
 };
-
-
 
 
 

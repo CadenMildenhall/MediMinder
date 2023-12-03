@@ -1,20 +1,13 @@
-const mDapiUrl = "/api/medicinedosage";
-
-export const getMedicineDosages = () =>
-{
-    return fetch(mDapiUrl).then((res) => res.json());
-}
-
-// MedicineDosageManager.js
-
-export const createMedicineDosage = (medicineId, dosageId, time) => {
+// Function to create MedicineDosage
+export const createMedicineDosage = (medicineId, dosageId, time, scheduleId) => {
     const data = {
       MedicineId: medicineId,
       DosageId: dosageId,
-      time: time.format("HH:mm"),
+      Time: time.format("HH:mm"),
+      ScheduleId: scheduleId,
     };
-    
-    console.log("medDoseData:", data)
+  
+    console.log(data);
   
     return fetch(mDapiUrl, {
       method: "POST",
@@ -30,7 +23,6 @@ export const createMedicineDosage = (medicineId, dosageId, time) => {
         return res.json();
       })
       .then((createdMedicineDosage) => {
-        console.log("After res.json() - createMedicineDosage");
         // You can return the createdMedicineDosage if needed
         return createdMedicineDosage;
       })

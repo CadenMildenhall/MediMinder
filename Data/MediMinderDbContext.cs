@@ -18,8 +18,6 @@ public class MediMinderDbContext : IdentityDbContext<IdentityUser>
 
     public DbSet<MedicineDosage> MedicineDosages { get; set; }
 
-    public DbSet<ScheduleMedicineDosage> scheduleMedicineDosages { get; set; }
-
     public MediMinderDbContext(DbContextOptions<MediMinderDbContext> context, IConfiguration config) : base(context)
     {
         _configuration = config;
@@ -29,22 +27,23 @@ public class MediMinderDbContext : IdentityDbContext<IdentityUser>
     {
         base.OnModelCreating(modelBuilder);
 
-modelBuilder.Entity<ScheduleMedicineDosage>()
-    .HasKey(smd => new { smd.ScheduleId, smd.MedicineDosageId });
+    modelBuilder.Entity<MedicineDosage>()
+        .HasOne(md => md.Schedule)
+        .WithMany(s => s.MedicineDosages)
+        .HasForeignKey(md => md.ScheduleId);
 
-modelBuilder.Entity<ScheduleMedicineDosage>()
-    .HasOne(smd => smd.Schedule)
-    .WithMany(s => s.ScheduleMedicineDosages)
-    .HasForeignKey(smd => smd.ScheduleId);
+    modelBuilder.Entity<MedicineDosage>()
+        .HasKey(md => new { md.MedicineId, md.DosageId });
 
-modelBuilder.Entity<ScheduleMedicineDosage>()
-    .HasOne(smd => smd.MedicineDosage)
-    .WithMany(md => md.ScheduleMedicineDosages)
-    .HasForeignKey(smd => smd.MedicineDosageId); // Use MedicineDosageId here
+    modelBuilder.Entity<MedicineDosage>()
+        .HasOne(md => md.Medicine)
+        .WithMany(m => m.MedicineDosages)
+        .HasForeignKey(md => md.MedicineId);
 
-
-
-
+    modelBuilder.Entity<MedicineDosage>()
+        .HasOne(md => md.Dosage)
+        .WithMany(d => d.MedicineDosages)
+        .HasForeignKey(md => md.DosageId);
 
 
         modelBuilder.Entity<IdentityUser>().HasData(new IdentityUser[]
@@ -235,3 +234,13 @@ modelBuilder.Entity<ScheduleMedicineDosage>()
     }
 }
 
+/*Composite Primary Key: The MedicineDosage entity has a composite primary key made up of MedicineId and DosageId. 
+This ensures that each combination of Medicine and Dosage is unique in the join table.
+
+Medicine Relationship: It defines a relationship between MedicineDosage and Medicine. 
+Each MedicineDosage has one associated Medicine, and each Medicine has many associated MedicineDosages. 
+The foreign key for the Medicine relationship is MedicineId in the MedicineDosage table.
+
+Dosage Relationship: Similarly, it defines a relationship between MedicineDosage and Dosage. 
+Each MedicineDosage has one associated Dosage, and each Dosage has many associated MedicineDosages. 
+The foreign key for the Dosage relationship is DosageId in the MedicineDosage table.*/
