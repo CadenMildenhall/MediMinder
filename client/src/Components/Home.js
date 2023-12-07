@@ -2,6 +2,10 @@ import { useEffect, useState } from 'react';
 import '../styles/Home.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
+import { getSchedule } from '../Managers/ScheduleManager';
+import { getMedicines } from '../Managers/MedicineManager';
+import { getDosages } from '../Managers/DosageManager';
+import { getMedicineDosages } from '../Managers/MedicineDosageManager';
 
 export const Home = () => {
   const [medicine, setMedicines] = useState([]);
@@ -10,8 +14,31 @@ export const Home = () => {
   // const [points, setPoints] = useState(1);
   const [totalPoints, setTotalPoints] = useState(0);
   const[weeks, setWeeks] = useState(1);
+  const [editedMedicine, setEditedMedicine] = useState({ medicineName: '', dosage: '', time: '', id: null });
+  const [schedule, setSchedule] = useState([]);
+  const [dosage, setDosage] = useState([]);
+  const [medicineDosages, setMedicineDosage] = useState([]);
+
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    getSchedule().then((scheduleData) => {
+      setSchedule(scheduleData);
+    });
+
+    getMedicines().then((medicines) => {
+      setMedicines(medicines);
+    });
+
+    getDosages().then((dosageData) => {
+      setDosage(dosageData);
+    });
+
+    getMedicineDosages().then((medicineDosages) => {
+      setMedicineDosage(medicineDosages);
+    });
+  }, []);
 
 
   const handleComplete = () => {
@@ -31,156 +58,90 @@ export const Home = () => {
     });
   
 return (
-
 <>
 
         <h1 className='header'>
             MediMinder
             </h1>
          
-    <div className="Homebuttons">
-    <div className="HomescheduleArea">
+    {medicineDosages.length < 1 && (
+    <div className="HomescheduleArea"> 
+    </div> 
+    )}
 
+{medicineDosages.length > 0 && (
+        <div className="scheduleArea">
+          {schedule.map((day) => (
+            <div key={day.id} className={day.day}>
+              {medicineDosages
+                .filter((entry) => entry.scheduleId === day.id)
+                .map((entry) => (
+                  <div key={entry.id} className="medicineEntry">
+                    <h6>
+                      {entry.medicineName} - {entry.amount} mg - {entry.time}
+                    </h6>
+                   
 
-{!completedMedicines &&
-<div className="daysWO">
-    <div className="Monday"></div>
-    <div className="Tuesday"></div>
-    <div className="Wednesday"></div>
-    <div className="Thursday"></div>
-    <div className="Friday"></div>
-    <div className="Saturday"></div>
-    <div className="Sunday"></div>
-</div>    
-}
-
-    {completedMedicines &&
-    <div className="days">
-        
-          <div className="Monday">
-              {medicine
-              .filter((m) => m.day === "Monday")
-              .map((m, index) => (
-                <h6  key={m.medicineName + index}>{m.medicineName}: {m.dosage}mg - {m.time.format('hh:mm A')}</h6>
-            ))}
-
-
-
+                  </div>
+                ))}
             </div>
-            <div className="Tuesday">
-            {medicine
-              .filter((m) => m.day === "Tuesday")
-              .map((m, index) => (
-                <h6  key={m.medicineName + index}>{m.medicineName}: {m.dosage}mg - {m.time.format('hh:mm A')}</h6>
-            ))}
+          ))}
+        </div>
+      )}
 
 
-
-            </div>
-            <div className="Wednesday">
-            {medicine
-              .filter((m) => m.day === "Wednesday")
-              .map((m, index) => (
-                <h6  key={m.medicineName + index}>{m.medicineName}: {m.dosage}mg - {m.time.format('hh:mm A')}</h6>
-            ))}
-
-
-
-            </div>
-            <div className="Thursday">
-            {medicine
-              .filter((m) => m.day === "Thursday")
-              .map((m, index) => (
-                <h6  key={m.medicineName + index}>{m.medicineName}: {m.dosage}mg - {m.time.format('hh:mm A')}</h6>
-            ))}
-
-
-
-            </div>
-            <div className="Friday">
-            {medicine
-              .filter((m) => m.day === "Friday")
-              .map((m, index) => (
-                <h6  key={m.medicineName + index}>{m.medicineName}: {m.dosage}mg - {m.time.format('hh:mm A')}</h6>
-            ))}
-
-
-            </div>
-            <div className="Saturday">
-            {medicine
-              .filter((m) => m.day === "Saturday")
-              .map((m, index) => (
-                <h6  key={m.medicineName + index}>{m.medicineName}: {m.dosage}mg - {m.time.format('hh:mm A')}</h6>
-            ))}
-
-
-
-            </div>
-            <div className="Sunday">
-            {medicine
-              .filter((m) => m.day === "Sunday")
-              .map((m, index) => (
-                <h6  key={m.medicineName + index}>{m.medicineName}: {m.dosage}mg - {m.time.format('hh:mm A')}</h6>
-            ))}
-
-
-
-            </div>
-          </div>
- }
-
+ 
 
 <div className='allCheck'>
 <div className='check'>
 <input
   className='cB'
   type='checkbox'
-  onChange={(e) => {
-    setTotalPoints((prevTotalPoints) => e.target.checked ? prevTotalPoints + 1 : prevTotalPoints - 1);
-  }}
+  // onChange={(e) => {
+  //   setTotalPoints((prevTotalPoints) => e.target.checked ? prevTotalPoints + 1 : prevTotalPoints - 1);
+  // }}
 /><input
   className='cB'
   type='checkbox'
-  onChange={(e) => {
-    setTotalPoints((prevTotalPoints) => e.target.checked ? prevTotalPoints + 1 : prevTotalPoints - 1);
-  }}
+  // onChange={(e) => {
+  //   setTotalPoints((prevTotalPoints) => e.target.checked ? prevTotalPoints + 1 : prevTotalPoints - 1);
+  // }}
 /><input
   className='cB'
   type='checkbox'
-  onChange={(e) => {
-    setTotalPoints((prevTotalPoints) => e.target.checked ? prevTotalPoints + 1 : prevTotalPoints - 1);
-  }}
+  // onChange={(e) => {
+  //   setTotalPoints((prevTotalPoints) => e.target.checked ? prevTotalPoints + 1 : prevTotalPoints - 1);
+  // }}
 /><input
   className='cB'
   type='checkbox'
-  onChange={(e) => {
-    setTotalPoints((prevTotalPoints) => e.target.checked ? prevTotalPoints + 1 : prevTotalPoints - 1);
-  }}
+  // onChange={(e) => {
+  //   setTotalPoints((prevTotalPoints) => e.target.checked ? prevTotalPoints + 1 : prevTotalPoints - 1);
+  // }}
 /><input
   className='cB'
   type='checkbox'
-  onChange={(e) => {
-    setTotalPoints((prevTotalPoints) => e.target.checked ? prevTotalPoints + 1 : prevTotalPoints - 1);
-  }}
+  // onChange={(e) => {
+  //   setTotalPoints((prevTotalPoints) => e.target.checked ? prevTotalPoints + 1 : prevTotalPoints - 1);
+  // }}
 /><input
   className='cB'
   type='checkbox'
-  onChange={(e) => {
-    setTotalPoints((prevTotalPoints) => e.target.checked ? prevTotalPoints + 1 : prevTotalPoints - 1);
-  }}
+  // onChange={(e) => {
+  //   setTotalPoints((prevTotalPoints) => e.target.checked ? prevTotalPoints + 1 : prevTotalPoints - 1);
+  // }}
 /><input
   className='cB'
   type='checkbox'
-  onChange={(e) => {
-    setTotalPoints((prevTotalPoints) => e.target.checked ? prevTotalPoints + 1 : prevTotalPoints - 1);
-  }}
+  // onChange={(e) => {
+  //   setTotalPoints((prevTotalPoints) => e.target.checked ? prevTotalPoints + 1 : prevTotalPoints - 1);
+  // }}
 />
 
 </div>
 </div>
 
-      </div>
-    </div>
+   <>
       
         <div className='scheduleIcon'>
         
@@ -203,6 +164,8 @@ return (
             </h1>
         </div>
 
+
+</>
 
 </>
 

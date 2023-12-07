@@ -1,10 +1,8 @@
 using MediMinder.Data;
 using MediMinder.Models;
-using Microsoft.AspNetCore.Identity;
+// using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Data.SqlTypes;
-using System.Xml;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -13,7 +11,7 @@ public class MedicineDosageController : ControllerBase
 private readonly MediMinderDbContext _dbContext;
 // private readonly UserManager<UserProfile> _userManager;
 
-public MedicineDosageController(MediMinderDbContext context, UserManager<UserProfile> userManager)
+public MedicineDosageController(MediMinderDbContext context)
 {
     _dbContext = context;
     // _userManager = userManager;
