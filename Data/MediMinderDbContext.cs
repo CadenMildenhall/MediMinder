@@ -27,23 +27,27 @@ public class MediMinderDbContext : IdentityDbContext<IdentityUser>
     {
         base.OnModelCreating(modelBuilder);
 
-    modelBuilder.Entity<MedicineDosage>()
-        .HasOne(md => md.Schedule)
-        .WithMany(s => s.MedicineDosages)
-        .HasForeignKey(md => md.ScheduleId);
+        // modelBuilder.Entity<MedicineDosage>()
+        //     .HasKey(md => new { md.MedicineId, md.DosageId });
 
-    modelBuilder.Entity<MedicineDosage>()
-        .HasKey(md => new { md.MedicineId, md.DosageId });
+        modelBuilder.Entity<MedicineDosage>()
+.Property(m => m.Id)
+.ValueGeneratedOnAdd();
 
-    modelBuilder.Entity<MedicineDosage>()
-        .HasOne(md => md.Medicine)
-        .WithMany(m => m.MedicineDosages)
-        .HasForeignKey(md => md.MedicineId);
+        modelBuilder.Entity<MedicineDosage>()
+            .HasOne(md => md.Medicine)
+            .WithMany(m => m.MedicineDosages)
+            .HasForeignKey(md => md.MedicineId);
 
-    modelBuilder.Entity<MedicineDosage>()
-        .HasOne(md => md.Dosage)
-        .WithMany(d => d.MedicineDosages)
-        .HasForeignKey(md => md.DosageId);
+        modelBuilder.Entity<MedicineDosage>()
+            .HasOne(md => md.Dosage)
+            .WithMany(d => d.MedicineDosages)
+            .HasForeignKey(md => md.DosageId);
+
+        // modelBuilder.Entity<MedicineDosage>()
+        //     .HasOne(md => md.UserProfile)
+        //     .WithMany(up => up.MedicineDosages)
+        //     .HasForeignKey(md => md.UserProfileId);
 
 
         modelBuilder.Entity<IdentityUser>().HasData(new IdentityUser[]
@@ -112,6 +116,11 @@ public class MediMinderDbContext : IdentityDbContext<IdentityUser>
         {
             Id = 6,
             MedicineName = "Zyrtec"
+        },
+        new Medicine
+        {
+            Id = 7,
+            MedicineName = "Nyquil"
         }
         });
 
@@ -185,6 +194,11 @@ public class MediMinderDbContext : IdentityDbContext<IdentityUser>
         {
             Id = 6,
             Amount = 35
+        },
+        new Dosage
+        {
+            Id = 7,
+            Amount = 40
         }
 
         });
@@ -196,37 +210,57 @@ public class MediMinderDbContext : IdentityDbContext<IdentityUser>
             {
                 Id = 1,
                 MedicineId = 1,
-                DosageId = 1
+                DosageId = 1,
+                ScheduleId = 1,
+             
             },
             new MedicineDosage
             {
                 Id = 2,
                 MedicineId = 2,
                 DosageId = 2,
+                ScheduleId = 2,
+            
             },
                         new MedicineDosage
             {
                 Id = 3,
                 MedicineId = 3,
                 DosageId = 3,
+                ScheduleId = 3,
+              
             },
                         new MedicineDosage
             {
                 Id = 4,
                 MedicineId = 4,
                 DosageId = 4,
+                ScheduleId = 4,
+              
             },
                         new MedicineDosage
             {
                 Id = 5,
                 MedicineId = 5,
                 DosageId = 5,
+                ScheduleId = 5,
+                
             },
                         new MedicineDosage
             {
                 Id = 6,
                 MedicineId = 6,
                 DosageId = 6,
+                ScheduleId = 6,
+              
+            },
+            new MedicineDosage
+            {
+                Id = 7,
+                MedicineId = 7,
+                DosageId = 7,
+                ScheduleId = 7,
+                
             }
         });
 

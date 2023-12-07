@@ -81,7 +81,7 @@ namespace MediMinder.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Day = table.Column<string>(type: "text", nullable: false)
+                    Day = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -203,9 +203,19 @@ namespace MediMinder.Migrations
                     FirstName = table.Column<string>(type: "text", nullable: false),
                     LastName = table.Column<string>(type: "text", nullable: false),
                     Address = table.Column<string>(type: "text", nullable: false),
-                    Points = table.Column<decimal>(type: "numeric", nullable: false),
-                    Weeks = table.Column<int>(type: "integer", nullable: false),
-                    IdentityUserId = table.Column<string>(type: "text", nullable: true)
+                    IdentityUserId = table.Column<string>(type: "text", nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "text", nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "text", nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "boolean", nullable: false),
+                    PasswordHash = table.Column<string>(type: "text", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "text", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "text", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "text", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "boolean", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "boolean", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "boolean", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -221,33 +231,31 @@ namespace MediMinder.Migrations
                 name: "MedicineDosages",
                 columns: table => new
                 {
-                    MedicineId = table.Column<int>(type: "integer", nullable: false),
-                    DosageId = table.Column<int>(type: "integer", nullable: false),
-                    Id = table.Column<int>(type: "integer", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Time = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    ScheduleId = table.Column<int>(type: "integer", nullable: false)
+                    MedicineId = table.Column<int>(type: "integer", nullable: true),
+                    DosageId = table.Column<int>(type: "integer", nullable: true),
+                    ScheduleId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MedicineDosages", x => new { x.MedicineId, x.DosageId });
+                    table.PrimaryKey("PK_MedicineDosages", x => x.Id);
                     table.ForeignKey(
                         name: "FK_MedicineDosages_Dosages_DosageId",
                         column: x => x.DosageId,
                         principalTable: "Dosages",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_MedicineDosages_Medicine_MedicineId",
                         column: x => x.MedicineId,
                         principalTable: "Medicine",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_MedicineDosages_Schedule_ScheduleId",
                         column: x => x.ScheduleId,
                         principalTable: "Schedule",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.InsertData(
@@ -255,8 +263,8 @@ namespace MediMinder.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { "dbc40bc6-0829-4ac5-a3ed-180f5e916a5f", 0, "7889643e-60a8-4052-8a32-083918ef88b1", "admina@strator.comx", false, false, null, null, null, "AQAAAAIAAYagAAAAEKtplxiBW3XFHS+Rey7MpQAlA+AaXgIG2hQaPY7LdyBdlWZXQC9tKcpz3TQG91g5wQ==", null, false, "5c0c3bf7-763f-40f5-9dec-a6ca95750dae", false, "Administrator" },
-                    { "dbc40bc6-0829-4ac5-a3ed-180f5e916a5s", 0, "6b3cdec2-daf3-4888-9b09-47649f110fb0", "milde@nhall.comx", false, false, null, null, null, "AQAAAAIAAYagAAAAEAGya4u3FHapv5a3NZa7wa5KvsEKKJJRDGAE0x7zDUieeu7K9v+ASp4lf5ak01oe7w==", null, false, "6c0e86f7-66be-4b77-8682-ed313cfa313e", false, "caden" }
+                    { "dbc40bc6-0829-4ac5-a3ed-180f5e916a5f", 0, "24a2cfac-a79d-4e7c-ad64-bc487b428323", "admina@strator.comx", false, false, null, null, null, "AQAAAAIAAYagAAAAEO7ofjNrlFSjOC0VW7NVDAbBSS1W7r6+aenvqsO6EGPEGMUSalCxe+ydzLqP5acepA==", null, false, "5be88daa-61f4-4bb6-ae8c-e0df7796481c", false, "Administrator" },
+                    { "dbc40bc6-0829-4ac5-a3ed-180f5e916a5s", 0, "4185de88-0ae6-4ed0-ade4-ae0861e40458", "milde@nhall.comx", false, false, null, null, null, "AQAAAAIAAYagAAAAEL6i6oelzsNoz4XvBvhlZJNg9WYPZSAxPn6q+0JoVU5bmE4bDsSdUOyYIwZVv/Ml2w==", null, false, "909fcb2f-ab3c-4e78-adc4-316c806d1917", false, "caden" }
                 });
 
             migrationBuilder.InsertData(
@@ -269,7 +277,8 @@ namespace MediMinder.Migrations
                     { 3, 15 },
                     { 4, 20 },
                     { 5, 30 },
-                    { 6, 35 }
+                    { 6, 35 },
+                    { 7, 40 }
                 });
 
             migrationBuilder.InsertData(
@@ -282,7 +291,8 @@ namespace MediMinder.Migrations
                     { 3, "Aleve" },
                     { 4, "Claritin" },
                     { 5, "Tylenol" },
-                    { 6, "Zyrtec" }
+                    { 6, "Zyrtec" },
+                    { 7, "Nyquil" }
                 });
 
             migrationBuilder.InsertData(
@@ -301,24 +311,25 @@ namespace MediMinder.Migrations
 
             migrationBuilder.InsertData(
                 table: "MedicineDosages",
-                columns: new[] { "DosageId", "MedicineId", "Id", "ScheduleId", "Time" },
+                columns: new[] { "Id", "DosageId", "MedicineId", "ScheduleId", "Time" },
                 values: new object[,]
                 {
-                    { 1, 1, 1, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 2, 2, 2, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 3, 3, 3, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 4, 4, 4, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 5, 5, 5, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 6, 6, 6, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
+                    { 1, 1, 1, 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 2, 2, 2, 2, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 3, 3, 3, 3, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 4, 4, 4, 4, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 5, 5, 5, 5, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 6, 6, 6, 6, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 7, 7, 7, 7, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
                 });
 
             migrationBuilder.InsertData(
                 table: "UserProfiles",
-                columns: new[] { "Id", "Address", "FirstName", "IdentityUserId", "LastName", "Points", "Weeks" },
+                columns: new[] { "Id", "AccessFailedCount", "Address", "ConcurrencyStamp", "EmailConfirmed", "FirstName", "IdentityUserId", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled" },
                 values: new object[,]
                 {
-                    { 1, "101 Main Street", "Admina", "dbc40bc6-0829-4ac5-a3ed-180f5e916a5f", "Strator", 0m, 0 },
-                    { 2, "202 Main Street", "caden", "dbc40bc6-0829-4ac5-a3ed-180f5e916a5s", "mildenhall", 0m, 0 }
+                    { 1, 0, "101 Main Street", "fb041dd2-222a-4652-80b7-2e31375f4175", false, "Admina", "dbc40bc6-0829-4ac5-a3ed-180f5e916a5f", "Strator", false, null, null, null, null, null, false, null, false },
+                    { 2, 0, "202 Main Street", "208433f2-cab9-4914-a1f9-f9089ae2d5f2", false, "caden", "dbc40bc6-0829-4ac5-a3ed-180f5e916a5s", "mildenhall", false, null, null, null, null, null, false, null, false }
                 });
 
             migrationBuilder.CreateIndex(
@@ -362,6 +373,11 @@ namespace MediMinder.Migrations
                 name: "IX_MedicineDosages_DosageId",
                 table: "MedicineDosages",
                 column: "DosageId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MedicineDosages_MedicineId",
+                table: "MedicineDosages",
+                column: "MedicineId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MedicineDosages_ScheduleId",

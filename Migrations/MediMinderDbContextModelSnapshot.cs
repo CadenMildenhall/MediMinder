@@ -67,6 +67,11 @@ namespace MediMinder.Migrations
                         {
                             Id = 6,
                             Amount = 35
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Amount = 40
                         });
                 });
 
@@ -116,29 +121,39 @@ namespace MediMinder.Migrations
                         {
                             Id = 6,
                             MedicineName = "Zyrtec"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            MedicineName = "Nyquil"
                         });
                 });
 
             modelBuilder.Entity("MediMinder.Models.MedicineDosage", b =>
                 {
-                    b.Property<int?>("MedicineId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("DosageId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("Id")
+                    b.Property<int?>("MedicineId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("ScheduleId")
+                    b.Property<int?>("ScheduleId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("Time")
                         .HasColumnType("timestamp without time zone");
 
-                    b.HasKey("MedicineId", "DosageId");
+                    b.HasKey("Id");
 
                     b.HasIndex("DosageId");
+
+                    b.HasIndex("MedicineId");
 
                     b.HasIndex("ScheduleId");
 
@@ -147,50 +162,58 @@ namespace MediMinder.Migrations
                     b.HasData(
                         new
                         {
-                            MedicineId = 1,
-                            DosageId = 1,
                             Id = 1,
-                            ScheduleId = 0,
+                            DosageId = 1,
+                            MedicineId = 1,
+                            ScheduleId = 1,
                             Time = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
-                            MedicineId = 2,
-                            DosageId = 2,
                             Id = 2,
-                            ScheduleId = 0,
+                            DosageId = 2,
+                            MedicineId = 2,
+                            ScheduleId = 2,
                             Time = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
-                            MedicineId = 3,
-                            DosageId = 3,
                             Id = 3,
-                            ScheduleId = 0,
+                            DosageId = 3,
+                            MedicineId = 3,
+                            ScheduleId = 3,
                             Time = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
-                            MedicineId = 4,
-                            DosageId = 4,
                             Id = 4,
-                            ScheduleId = 0,
+                            DosageId = 4,
+                            MedicineId = 4,
+                            ScheduleId = 4,
                             Time = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
-                            MedicineId = 5,
-                            DosageId = 5,
                             Id = 5,
-                            ScheduleId = 0,
+                            DosageId = 5,
+                            MedicineId = 5,
+                            ScheduleId = 5,
                             Time = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
-                            MedicineId = 6,
-                            DosageId = 6,
                             Id = 6,
-                            ScheduleId = 0,
+                            DosageId = 6,
+                            MedicineId = 6,
+                            ScheduleId = 6,
+                            Time = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 7,
+                            DosageId = 7,
+                            MedicineId = 7,
+                            ScheduleId = 7,
                             Time = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
@@ -204,7 +227,6 @@ namespace MediMinder.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Day")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -257,9 +279,18 @@ namespace MediMinder.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Address")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -272,11 +303,32 @@ namespace MediMinder.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<decimal>("Points")
-                        .HasColumnType("numeric");
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("boolean");
 
-                    b.Property<int>("Weeks")
-                        .HasColumnType("integer");
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasColumnType("text");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 
@@ -288,22 +340,30 @@ namespace MediMinder.Migrations
                         new
                         {
                             Id = 1,
+                            AccessFailedCount = 0,
                             Address = "101 Main Street",
+                            ConcurrencyStamp = "fb041dd2-222a-4652-80b7-2e31375f4175",
+                            EmailConfirmed = false,
                             FirstName = "Admina",
                             IdentityUserId = "dbc40bc6-0829-4ac5-a3ed-180f5e916a5f",
                             LastName = "Strator",
-                            Points = 0m,
-                            Weeks = 0
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            TwoFactorEnabled = false
                         },
                         new
                         {
                             Id = 2,
+                            AccessFailedCount = 0,
                             Address = "202 Main Street",
+                            ConcurrencyStamp = "208433f2-cab9-4914-a1f9-f9089ae2d5f2",
+                            EmailConfirmed = false,
                             FirstName = "caden",
                             IdentityUserId = "dbc40bc6-0829-4ac5-a3ed-180f5e916a5s",
                             LastName = "mildenhall",
-                            Points = 0m,
-                            Weeks = 0
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            TwoFactorEnabled = false
                         });
                 });
 
@@ -426,13 +486,13 @@ namespace MediMinder.Migrations
                         {
                             Id = "dbc40bc6-0829-4ac5-a3ed-180f5e916a5f",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "7889643e-60a8-4052-8a32-083918ef88b1",
+                            ConcurrencyStamp = "24a2cfac-a79d-4e7c-ad64-bc487b428323",
                             Email = "admina@strator.comx",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAIAAYagAAAAEKtplxiBW3XFHS+Rey7MpQAlA+AaXgIG2hQaPY7LdyBdlWZXQC9tKcpz3TQG91g5wQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEO7ofjNrlFSjOC0VW7NVDAbBSS1W7r6+aenvqsO6EGPEGMUSalCxe+ydzLqP5acepA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "5c0c3bf7-763f-40f5-9dec-a6ca95750dae",
+                            SecurityStamp = "5be88daa-61f4-4bb6-ae8c-e0df7796481c",
                             TwoFactorEnabled = false,
                             UserName = "Administrator"
                         },
@@ -440,13 +500,13 @@ namespace MediMinder.Migrations
                         {
                             Id = "dbc40bc6-0829-4ac5-a3ed-180f5e916a5s",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "6b3cdec2-daf3-4888-9b09-47649f110fb0",
+                            ConcurrencyStamp = "4185de88-0ae6-4ed0-ade4-ae0861e40458",
                             Email = "milde@nhall.comx",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAIAAYagAAAAEAGya4u3FHapv5a3NZa7wa5KvsEKKJJRDGAE0x7zDUieeu7K9v+ASp4lf5ak01oe7w==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEL6i6oelzsNoz4XvBvhlZJNg9WYPZSAxPn6q+0JoVU5bmE4bDsSdUOyYIwZVv/Ml2w==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "6c0e86f7-66be-4b77-8682-ed313cfa313e",
+                            SecurityStamp = "909fcb2f-ab3c-4e78-adc4-316c806d1917",
                             TwoFactorEnabled = false,
                             UserName = "caden"
                         });
@@ -537,21 +597,15 @@ namespace MediMinder.Migrations
                 {
                     b.HasOne("MediMinder.Models.Dosage", "Dosage")
                         .WithMany("MedicineDosages")
-                        .HasForeignKey("DosageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DosageId");
 
                     b.HasOne("MediMinder.Models.Medicine", "Medicine")
                         .WithMany("MedicineDosages")
-                        .HasForeignKey("MedicineId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("MedicineId");
 
                     b.HasOne("MediMinder.Models.Schedule", "Schedule")
                         .WithMany("MedicineDosages")
-                        .HasForeignKey("ScheduleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ScheduleId");
 
                     b.Navigation("Dosage");
 

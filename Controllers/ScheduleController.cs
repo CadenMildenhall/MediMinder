@@ -18,105 +18,98 @@ public class ScheduleController : ControllerBase
         _dbContext = context;
     }
 
-    [HttpPost]
-    public async Task<IActionResult> Add([FromBody] Schedule schedule)
-    {
-        try
-        {
-            // Validate the incoming schedule input
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+    // [HttpPost]
+    // public async Task<IActionResult> Add([FromBody] Schedule schedule)
+    // {
+    //     try
+    //     {
+    //         // Validate the incoming schedule input
+    //         if (!ModelState.IsValid)
+    //         {
+    //             return BadRequest(ModelState);
+    //         }
 
-            // Create or retrieve MedicineDosage
-            var firstMedicineDosage = schedule.MedicineDosages.FirstOrDefault();
+    //         // Create or retrieve MedicineDosage
+    //         var firstMedicineDosage = schedule.MedicineDosages.FirstOrDefault();
 
-            if (firstMedicineDosage == null)
-            {
-                return BadRequest("MedicineDosages collection is empty");
-            }
+    //         if (firstMedicineDosage == null)
+    //         {
+    //             return BadRequest("MedicineDosages collection is empty");
+    //         }
 
-            var medicineDosage = await CreateOrRetrieveMedicineDosageAsync((int)firstMedicineDosage.MedicineId, (int)firstMedicineDosage.DosageId, firstMedicineDosage.ScheduleId);
+    //         var medicineDosage = await CreateOrRetrieveMedicineDosageAsync((int)firstMedicineDosage.MedicineId, (int)firstMedicineDosage.DosageId, firstMedicineDosage.Time ,(int)firstMedicineDosage.ScheduleId);
 
-            // Retrieve the selected day's schedule from the database
-            var existingSchedule = await _dbContext.Schedule
-                .Include(s => s.MedicineDosages)
-                .FirstOrDefaultAsync(s => s.Day == schedule.Day);
+    //         // Retrieve the selected day's schedule from the database
+    //         var existingSchedule = await _dbContext.Schedule
+    //             .Include(s => s.MedicineDosages)
+    //             .FirstOrDefaultAsync(s => s.Day == schedule.Day);
 
-            // If the schedule for the selected day exists, update the dosage
-            if (existingSchedule != null)
-            {
-                // Associate the new MedicineDosage with the existingSchedule
-                existingSchedule.MedicineDosages.Add(medicineDosage);
+    //         // If the schedule for the selected day exists, update the dosage
+    //         if (existingSchedule != null)
+    //         {
+    //             // Associate the new MedicineDosage with the existingSchedule
+    //             existingSchedule.MedicineDosages.Add(medicineDosage);
 
-                // Save changes to the database
-                await _dbContext.SaveChangesAsync();
+    //             // Save changes to the database
+    //             await _dbContext.SaveChangesAsync();
 
-                // Return the created or updated schedule entry ID
-                return CreatedAtAction(nameof(Get), new { id = existingSchedule.Id }, existingSchedule.Id);
-            }
-            else
-            {
-                // If the schedule for the selected day does not exist, add a new entry
-                var newSchedule = new Schedule
-                {
-                    Day = schedule.Day,
-                    MedicineDosages = new List<MedicineDosage> { medicineDosage }
-                };
+    //             // Return the created or updated schedule entry ID
+    //             return CreatedAtAction(nameof(Get), new { id = existingSchedule.Id }, existingSchedule.Id);
+    //         }
+    //         else
+    //         {
+    //             // If the schedule for the selected day does not exist, add a new entry
+    //             var newSchedule = new Schedule
+    //             {
+    //                 Day = existingSchedule.Day,
+    //                 // MedicineDosages = new List<MedicineDosage> { medicineDosage }
+    //             };
 
-                // Add the new schedule entry to the database
-                _dbContext.Schedule.Add(newSchedule);
+    //             // Add the new schedule entry to the database
+    //             _dbContext.Schedule.Add(newSchedule);
 
-                // Save changes to the database
-                await _dbContext.SaveChangesAsync();
+    //             // Save changes to the database
+    //             await _dbContext.SaveChangesAsync();
 
-                // Return the created schedule entry ID
-                return CreatedAtAction(nameof(Get), new { id = newSchedule.Id }, newSchedule.Id);
-            }
-        }
-        catch (Exception ex)
-        {
-            // Log the exception or handle it appropriately
-            return StatusCode(500, "Internal Server Error");
-        }
-    }
+    //             // Return the created schedule entry ID
+    //             return CreatedAtAction(nameof(Get), new { id = newSchedule.Id }, newSchedule);
+    //         }
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         // Log the exception or handle it appropriately
+    //         return StatusCode(500, "Internal Server Error");
+    //     }
+    // }
 
-    [HttpGet]
-    public IActionResult Get()
-    {
-        var schedules = _dbContext.Schedule
-            .Include(s => s.MedicineDosages)
-            .ThenInclude(md => md.Medicine)
-            .Include(s => s.MedicineDosages)
-            .ThenInclude(md => md.Dosage)
-            .ToList();
+[HttpGet]
+public IActionResult Get()
+{
+    return Ok(_dbContext.Schedule);
+}
+    // // Other actions...
 
-        return Ok(schedules);
-    }
+    // private async Task<MedicineDosage> CreateOrRetrieveMedicineDosageAsync(int medicineId, int dosageId,DateTime time, int ScheduleId)
+    // {
+    //     var existingMedicineDosage = await _dbContext.MedicineDosages
+    //         .FirstOrDefaultAsync(md => md.MedicineId == medicineId && md.DosageId == dosageId);
 
-    // Other actions...
+    //     if (existingMedicineDosage != null)
+    //     {
+    //         return existingMedicineDosage;
+    //     }
 
-    private async Task<MedicineDosage> CreateOrRetrieveMedicineDosageAsync(int medicineId, int dosageId, int ScheduleId)
-    {
-        var existingMedicineDosage = await _dbContext.MedicineDosages
-            .FirstOrDefaultAsync(md => md.MedicineId == medicineId && md.DosageId == dosageId);
+    //     var newMedicineDosage = new MedicineDosage
+    //     {
+    //         MedicineId = medicineId,
+    //         DosageId = dosageId,
+    //         Time  = time,
+    //         ScheduleId = ScheduleId
+    //     };
 
-        if (existingMedicineDosage != null)
-        {
-            return existingMedicineDosage;
-        }
+    //     _dbContext.MedicineDosages.Add(newMedicineDosage);
+    //     await _dbContext.SaveChangesAsync();
 
-        var newMedicineDosage = new MedicineDosage
-        {
-            MedicineId = medicineId,
-            DosageId = dosageId,
-            ScheduleId = ScheduleId
-        };
-
-        _dbContext.MedicineDosages.Add(newMedicineDosage);
-        await _dbContext.SaveChangesAsync();
-
-        return newMedicineDosage;
-    }
+    //     return newMedicineDosage;
+    // }
 }

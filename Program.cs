@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using MediMinder.Data;
+using MediMinder.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +37,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         };
     });
 
+
+
 builder.Services.AddIdentityCore<IdentityUser>(config =>
             {
                 //for demonstration only - change these for other projects
@@ -44,6 +47,9 @@ builder.Services.AddIdentityCore<IdentityUser>(config =>
                 config.Password.RequireLowercase = false;
                 config.Password.RequireNonAlphanumeric = false;
                 config.Password.RequireUppercase = false;
+
+                
+
             })
     .AddRoles<IdentityRole>()  //add the role service.  
     .AddEntityFrameworkStores<MediMinderDbContext>();
@@ -53,6 +59,7 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 // allows our api endpoints to access the database through Entity Framework Core
 builder.Services.AddNpgsql<MediMinderDbContext>(builder.Configuration["MediMinderDbConnectionString"]);
+
 
 
 var app = builder.Build();

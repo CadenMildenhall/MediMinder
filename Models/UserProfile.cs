@@ -5,18 +5,22 @@ using Microsoft.AspNetCore.Identity;
 
 namespace MediMinder.Models;
 
-public class UserProfile
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
+
+public class UserProfile : IdentityUser<int>
 {
+    [Key]
     public int Id { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string Address { get; set; }
-    public decimal Points { get; set; }
-    public int Weeks { get; set; }
     [NotMapped] // not mapped means that EF Core won't create column for this property in the db
     public string Email { get; set; }
     [NotMapped]
     public string UserName { get; set; }
     public string? IdentityUserId { get; set; }
     public IdentityUser? IdentityUser { get; set; }
+    // public ICollection<MedicineDosage>? MedicineDosages { get; set; }
 }
+

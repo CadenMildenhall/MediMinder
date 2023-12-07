@@ -2,6 +2,7 @@
 
 
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -11,7 +12,8 @@ public class Dosage
 {
     public int Id { get; set; }
     public int Amount { get; set; }
-    public List<MedicineDosage> MedicineDosages { get; set; }
+    [JsonIgnore]
+    public List<MedicineDosage>? MedicineDosages { get; set; }
 
 
 }

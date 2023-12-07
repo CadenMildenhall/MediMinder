@@ -6,7 +6,6 @@ import "antd/lib/date-picker/style";
 import { getDosages } from "../Managers/DosageManager";
 import { getSchedule } from "../Managers/ScheduleManager";
 import { useNavigate } from "react-router-dom";
-import { createMedicineDosageAndSchedule } from "../Managers/ScheduleManager";
 import { createMedicineDosage, getMedicineDosages } from "../Managers/MedicineDosageManager";
 
 export const Schedule = ({ onComplete }) => {
@@ -16,128 +15,112 @@ export const Schedule = ({ onComplete }) => {
   const [dosage, setDosage] = useState([]);
   const [medicines, setMedicines] = useState([]);
   const [time, setTime] = useState(null);
-  const [days, setDays] = useState([]);
+  const [schedule, setSchedule] = useState([]);
   const [medicineDosages, setMedicineDosage] = useState([]);
-
-  const [scheduleEntries, setScheduleEntries] = useState([])
-
+  const [scheduleEntries, setScheduleEntries] = useState([]);
+  const [updatedSchedule, setUpdatedSchedule] = useState([]);
   const navigate = useNavigate();
 
-  useEffect(() => {
 
+  useEffect(() => {
+    // Fetch schedule entries when the component mounts
+    const fetchScheduleEntries = async () => {
+      try {
+        const data = await getMedicineDosages();
+        setScheduleEntries(data);
+      } catch (error) {
+        console.error('Error fetching schedule entries:', error);
+      }
+    };
+
+    fetchScheduleEntries();
+  }, []); 
+
+  useEffect(() => {
     getSchedule().then((scheduleData) => {
-      setDays(scheduleData); // fetches the schedule data and assigns it to the variable "days"
+      setSchedule(scheduleData);
     });
 
     getMedicines().then((medicines) => {
-      setMedicines(medicines); // fetches the medicine data and assigns it to the variable "medicine"
+      setMedicines(medicines);
     });
 
     getDosages().then((dosageData) => {
-      setDosage(dosageData); // fetches the dosage data and assigns it to the variable "dosage"
+      setDosage(dosageData);
     });
 
     getMedicineDosages().then((medicineDosages) => {
       setMedicineDosage(medicineDosages);
-    })
+      
+    });
+  }, []);
 
-  }
-    , []);
+  const handleSubmit = async () => {
+    const selectedDay = schedule.find((day) => day.day === selectValue);
+    const selectedMedicine = medicines.find((medicine) => medicine.medicineName === inputValue);
+    const selectedDosage = dosage.find((d) => d.amount === parseInt(dosageValue));
 
-    const handleSubmit = async () => {
-      // Find selected objects based on user input
-      const selectedDay = days.find((day) => day.day === selectValue);
-      const selectedMedicine = medicines.find((medicine) => medicine.medicineName === inputValue);
-      const selectedDosage = dosage.find((d) => d.amount === parseInt(dosageValue));
-    
-      console.log(selectedDay);
-      console.log(selectedMedicine);
-      console.log(selectedDosage);
-    
-      if (selectedDay && selectedMedicine && selectedDosage && time) {
-        try {
-          // Create a new MedicineDosage with the associated ScheduleId
-          const createdMedicineDosage = await createMedicineDosage(
-            selectedMedicine.id,
-            selectedDosage.id,
-            time,
-            selectedDay.scheduleId  // Assuming scheduleId is available in the selectedDay object
-          );
-    
-          console.log("createdMedDose:", createdMedicineDosage);
-    
-          // Create a new Schedule entry with the MedicineDosage association
-          const data = await createMedicineDosageAndSchedule(
-            selectedMedicine.id,
-            selectedDosage.id,
-            selectValue,
-            time,
-            createdMedicineDosage.scheduleId  // Use the scheduleId from the createdMedicineDosage
-          ).catch((error) => console.error("Error in createMedicineDosageAndSchedule:", error));
-    
-          console.log("Response from createMedicineDosageAndSchedule:", data);
-    
-          // Update local state with the new schedule entry
-          setScheduleEntries([...scheduleEntries, data]);
-          console.log("schedule entry:", scheduleEntries);
-    
-          // Clear form fields and update state
-          setSelectValue("");
-          setInputValue("");
-          setDosageValue("");
-          setTime(null);
-    
-          // Update the schedule divs
-          const updatedSchedule = days.map((day) => ({
-            day: day.day,
-            entries: scheduleEntries
-              .filter((entry) => entry.day === day.day)
-              .map((entry) => (
-                <h6 key={entry.id}>
-                  {entry.medicine} - {entry.dosage} mg - {entry.time}
-                </h6>
-              )),
-          }));
-    
-          setUpdatedSchedule(updatedSchedule);
-        } catch (error) {
-          console.error("Error handling submit:", error);
-          console.error("Error details:", error);
-        }
+
+    console.log(selectedMedicine);
+    console.log(selectedMedicine.medicineName)
+
+    if (selectedDay && selectedMedicine && selectedDosage && time) {
+      try {
+        const createdMedicineDosage = await createMedicineDosage(
+          time,
+          selectedDay.id,
+          selectedMedicine.medicineName,  // Pass the medicine name
+          selectedDosage.amount,            // Pass the dosage amount
+        );
+        
+        // console.log(createdMedicineDosage);
+        // Update local state with the new medicine dosage entry
+        setScheduleEntries([...scheduleEntries, createdMedicineDosage]);
+
+        // Clear form fields and update state
+        setSelectValue("");
+        setInputValue("");
+        setDosageValue("");
+        setTime(null);
+      } catch (error) {
+        console.error("Error handling submit:", error);
+        console.error("Error details:", error);
       }
-    };
-    
+    }
+  };
 
-  const handleComplete = (e) => {
-    onComplete = true;
-    navigate("/newschedule");
-  }
-
+  const handleComplete = (selectedMedicineEntry) => {
+    navigate("/newschedule", { state: { selectedMedicineEntry } });
+  };
   return (
-    <><div className="buttons">
-      <>
+    <>
+      <div className="buttons">
         <div className="scheduleArea">
-          {updatedSchedule.map((day) => (
-            <div key={day.day} className={day.day}>
-              {day.entries}
+          {schedule.map((day) => (
+            <div key={day.id} className={day.day}>
+              {scheduleEntries
+                .filter((entry) => entry.scheduleId === day.id)
+                .map((entry) => (
+                  <h6 key={entry.id}>
+                    {entry.medicine?.medicineName} - {entry.dosage?.amount} mg - {entry.time}
+                  </h6>
+                ))}
             </div>
           ))}
         </div>
-
-      </>
-    </div>
+      </div>
 
       <div className="inputs">
-
         <select
           className="dayInput"
           value={selectValue}
           onChange={(e) => setSelectValue(e.target.value)}
         >
-          {days
-            .map((d) => (
-              <option value={d.day}>{d.day}</option>
-            ))}
+          {schedule.map((s) => (
+            <option value={s.day} key={s.id}>
+              {s.day}
+            </option>
+          ))}
         </select>
 
         <select
@@ -145,37 +128,39 @@ export const Schedule = ({ onComplete }) => {
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
         >
-          {medicines
-            .map((m) => (
-              <option value={m.medicineName}>{m.medicineName}</option>
-            ))}
+          {medicines.map((m) => (
+            <option value={m.medicineName} key={m.id}>
+              {m.medicineName}
+            </option>
+          ))}
         </select>
 
         <DatePicker
           type="datetime-local"
-          onChange={newTime => setTime(newTime)}
+          onChange={(newTime) => setTime(newTime)}
           value={time}
-          className="timeInput" />
+          className="timeInput"
+        />
 
         <select
           className="medicineInput"
           value={dosageValue}
           onChange={(e) => setDosageValue(e.target.value)}
         >
-          {dosage
-            .map((d) => (
-              <option value={d.amount}>{d.amount}</option>
-            ))}
+          {dosage.map((d) => (
+            <option value={d.amount} key={d.id}>
+              {d.amount}
+            </option>
+          ))}
         </select>
 
-        <button onClick={(e) => { handleSubmit(e.preventDefault()); }} className="submitS">
+        <button onClick={(e) => handleSubmit(e.preventDefault())} className="submitS">
           Add
         </button>
-        <button onClick={(e) => { handleComplete(e.preventDefault()); }} className="cSchedule">
+        <button onClick={(e) => handleComplete(e.preventDefault())} className="cSchedule">
           Complete
         </button>
       </div>
     </>
   );
 };
-
